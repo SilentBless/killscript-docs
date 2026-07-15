@@ -209,3 +209,5 @@ PingController:SetPing(position: Vector3)
 | `Mine` | `0` | Ping локального игрока. |
 | `Party` | `1` | Ping участника группы. |
 | `Ally` | `2` | Ping союзника. |
+
+Связанные типы: [Color](../color/), [Vector3](../vector3/) и [Team](../team/).

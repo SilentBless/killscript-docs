@@ -225,5 +225,6 @@ Returns all active thrown items, such as grenades, that have not exploded yet. O
 
 **Returns:** Array<[ThrownProjectile](../entity/#thrownprojectile)>
 
+Related types: [Array](../array/) and [Vector3](../vector3/).
 
 

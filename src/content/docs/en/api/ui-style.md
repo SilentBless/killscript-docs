@@ -140,4 +140,4 @@ panel:ScheduleAnimation({
 })
 ```
 
-See [UI animations](../ui-animation/) for the complete parameter reference.
+See [UI animations](../ui-animation/) for the complete parameter reference. Translation and color values use [Vector3](../vector3/) and [Color](../color/).

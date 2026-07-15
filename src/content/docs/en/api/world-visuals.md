@@ -122,3 +122,5 @@ Every method returns `nil`.
 | `SetFillBase` | `fillBase: number` | Sets the base fill density. |
 | `SetOcclusionEnabled` | `enabled: bool` | Enables geometry occlusion masking. |
 | `SetVisible` | `visible: bool` | Shows or hides the area. |
+
+Related types: [Vector3](../vector3/), [Color](../color/), and [Texture](../texture/).

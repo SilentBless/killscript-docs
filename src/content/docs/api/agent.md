@@ -636,4 +636,5 @@ Movement:GetZones(): Array<string>
 | `SoundRange` | number | `get` | Радиус слышимости звука, создаваемого агентом. |
 | `TicksSinceLastVisible` | int | `get` | <span class="api-context api-context--client">Только client</span> Количество тиков с момента, когда агент был виден в последний раз. |
 
+Связанные типы: [Array](../array/), [Color](../color/), [Vector2](../vector2/), [Vector3](../vector3/) и [Quaternion](../quaternion/).
 

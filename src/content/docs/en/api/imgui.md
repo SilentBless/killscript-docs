@@ -233,4 +233,5 @@ Floating HUD window visibility mode.
 - [Vector2](../vector2/) — position;
 - [Color](../color/) — color and transparency;
 - [Texture](../texture/) — image;
+- [Screen](../screen/) — screen dimensions;
 - [Scheduler](../scheduler/) — redraw every frame.

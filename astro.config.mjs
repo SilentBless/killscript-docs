@@ -35,19 +35,82 @@ export default defineConfig({
 			lastUpdated: true,
 			customCss: ['./src/styles/custom.css'],
 			sidebar: [
+				{ slug: 'docs' },
 				{
-					label: 'Документация',
-					translations: { en: 'Documentation' },
-					items: [{ slug: 'docs' }],
+					label: 'Начало работы',
+					translations: { en: 'Getting started' },
+					collapsed: true,
+					items: [
+						{ slug: 'getting-started/overview' },
+						{ slug: 'getting-started/first-module' },
+						{ slug: 'getting-started/first-reflex-module' },
+						{ slug: 'getting-started/module-structure' },
+						{ slug: 'getting-started/workflow' },
+						{ slug: 'getting-started/packages' },
+					],
+				},
+				{
+					label: 'Разработка модулей',
+					translations: { en: 'Module development' },
+					collapsed: true,
+					items: [
+						{ slug: 'module-development/editor' },
+						{ slug: 'module-development/code-organization' },
+						{ slug: 'module-development/data-and-input' },
+						{ slug: 'module-development/assets' },
+					],
+				},
+				{
+					label: 'Интерфейсные руководства',
+					translations: { en: 'Interface guides' },
+					collapsed: true,
+					items: [
+						{ slug: 'interface/choosing-ui' },
+						{ slug: 'interface/imgui-hud' },
+						{ slug: 'interface/uxml-interface' },
+						{ slug: 'interface/interactive-ui' },
+					],
+				},
+				{
+					label: 'Reflex-модули',
+					translations: { en: 'Reflex modules' },
+					collapsed: true,
+					items: [
+						{ slug: 'reflex/architecture' },
+						{ slug: 'reflex/network-protocol' },
+						{ slug: 'reflex/server-loop' },
+						{ slug: 'reflex/complete-module' },
+					],
+				},
+				{
+					label: 'Практические рецепты',
+					translations: { en: 'Practical recipes' },
+					collapsed: true,
+					items: [
+						{ slug: 'recipes/toggle-action' },
+						{ slug: 'recipes/persistent-state' },
+						{ slug: 'recipes/ally-labels' },
+						{ slug: 'recipes/camera-preview' },
+					],
+				},
+				{
+					label: 'Пользовательские серверы',
+					translations: { en: 'Custom servers' },
+					collapsed: true,
+					items: [
+						{ slug: 'servers/custom-server' },
+						{ slug: 'servers/commands' },
+					],
 				},
 				{
 					label: 'Справочник API',
 					translations: { en: 'API reference' },
+					collapsed: true,
 					items: [
 						{
 							label: 'Базовые типы',
 							translations: { en: 'Core types' },
-							collapsed: false,
+							collapsed: true,
 							items: [
 								{ slug: 'api/array' },
 								{ slug: 'api/color' },
@@ -60,13 +123,13 @@ export default defineConfig({
 						{
 							label: 'Выполнение',
 							translations: { en: 'Runtime' },
-							collapsed: false,
+							collapsed: true,
 							items: [{ slug: 'api/time' }, { slug: 'api/scheduler' }],
 						},
 						{
 							label: 'Данные и ввод',
 							translations: { en: 'Data and input' },
-							collapsed: false,
+							collapsed: true,
 							items: [
 								{ slug: 'api/input-action' },
 								{ slug: 'api/config' },
@@ -77,7 +140,7 @@ export default defineConfig({
 						{
 							label: 'Окружение',
 							translations: { en: 'Environment' },
-							collapsed: false,
+							collapsed: true,
 							items: [
 								{ slug: 'api/cpu-limit' },
 								{ slug: 'api/map-info' },
@@ -89,13 +152,13 @@ export default defineConfig({
 						{
 							label: 'Графика',
 							translations: { en: 'Graphics' },
-							collapsed: false,
+							collapsed: true,
 							items: [{ slug: 'api/camera' }, { slug: 'api/texture' }],
 						},
 						{
 							label: 'Игровой мир',
 							translations: { en: 'Game world' },
-							collapsed: false,
+							collapsed: true,
 							items: [
 								{ slug: 'api/agent' },
 								{ slug: 'api/item' },
@@ -107,7 +170,7 @@ export default defineConfig({
 						{
 							label: 'Матч и сеть',
 							translations: { en: 'Match and networking' },
-							collapsed: false,
+							collapsed: true,
 							items: [
 								{ slug: 'api/network' },
 								{ slug: 'api/defusal-game' },
@@ -119,7 +182,7 @@ export default defineConfig({
 						{
 							label: 'Отображение и общение',
 							translations: { en: 'Presentation and communication' },
-							collapsed: false,
+							collapsed: true,
 							items: [
 								{ slug: 'api/audio' },
 								{ slug: 'api/world-visuals' },
@@ -130,12 +193,12 @@ export default defineConfig({
 						{
 							label: 'Интерфейс',
 							translations: { en: 'Interface' },
-							collapsed: false,
+							collapsed: true,
 							items: [
 								{ slug: 'api/imgui' },
 								{
 									label: 'UI',
-									collapsed: false,
+									collapsed: true,
 									items: [
 										{ slug: 'api/ui' },
 										{ slug: 'api/ui-elements' },

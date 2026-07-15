@@ -79,4 +79,4 @@ Scheduler:OnFrame(function()
 end)
 ```
 
-The API receiving a `Rect` defines its coordinate system. The type itself only stores a rectangular region.
+The API receiving a `Rect` defines its coordinate system. The type itself only stores a rectangular region. See [ImGui](../imgui/) for practical drawing methods.

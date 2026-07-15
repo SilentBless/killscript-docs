@@ -3,9 +3,80 @@ title: Documentation
 description: KILLSCRIPT documentation sections for module developers.
 ---
 
-import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+import { LinkCard } from '@astrojs/starlight/components';
 
 Choose a section based on what you want to build. If you need to look up a signature or property access mode, start with the API reference.
+
+## Getting started
+
+<LinkCard
+	title="Module overview"
+	description="Regular and Reflex modules, folder projects, .KillScript packages, and the recommended learning path."
+	href="../getting-started/overview/"
+/>
+
+<LinkCard
+	title="Your first module"
+	description="Create a module in the game, enter a map, use the console, write Lua, and confirm hot reload."
+	href="../getting-started/first-module/"
+/>
+
+<LinkCard
+	title="Your first Reflex module"
+	description="Two entry points, client/server contexts, and a first table exchange through Network."
+	href="../getting-started/first-reflex-module/"
+/>
+
+<LinkCard
+	title="Module structure"
+	description="module.json, entry points, settings, input, assets, tags, and size limits."
+	href="../getting-started/module-structure/"
+/>
+
+<LinkCard
+	title="Development and debugging"
+	description="A fast editing loop, console filters, automatic reload, and common errors."
+	href="../getting-started/workflow/"
+/>
+
+<LinkCard
+	title="Imports and packages"
+	description="How .KillScript differs from a folder, how to import it, and how Fork creates an editable copy."
+	href="../getting-started/packages/"
+/>
+
+## Module development
+
+<LinkCard title="Editor and API" description="Open the project, use ModuleAPI, and restore completion." href="../module-development/editor/" />
+<LinkCard title="Organizing Lua code" description="Local state, functions, nil checks, hot reload, and client/server separation." href="../module-development/code-organization/" />
+<LinkCard title="Settings, input, and data" description="Choose between Config, InputActions, and Storage." href="../module-development/data-and-input/" />
+<LinkCard title="Assets and localization" description="Images, audio, UXML/USS, translations, and release preparation." href="../module-development/assets/" />
+
+## Interface guides
+
+<LinkCard title="Choosing a UI API" description="When to use ImGui, UXML, or WorldVisuals." href="../interface/choosing-ui/" />
+<LinkCard title="ImGui HUD" description="An adaptive information block using local-player health." href="../interface/imgui-hud/" />
+<LinkCard title="Your first UXML interface" description="A persistent panel, USS styles, and Lua updates." href="../interface/uxml-interface/" />
+<LinkCard title="Events, styles, and animations" description="An interactive window, input capture, and a smooth entrance." href="../interface/interactive-ui/" />
+
+## Reflex modules
+
+<LinkCard title="Reflex architecture" description="Client/server boundary, lifecycle, and responsibilities." href="../reflex/architecture/" />
+<LinkCard title="Network protocol" description="Message types, synchronization, and input validation." href="../reflex/network-protocol/" />
+<LinkCard title="Server loop" description="OnTick, intervals, CPU budget, and safe object access." href="../reflex/server-loop/" />
+<LinkCard title="Complete Reflex module" description="A ready low-health warning with client and server code." href="../reflex/complete-module/" />
+
+## Practical recipes
+
+<LinkCard title="Toggle action" description="inputs.json, OnPerformed, and a controlled HUD." href="../recipes/toggle-action/" />
+<LinkCard title="Persistent state" description="Versioned interface data through Storage." href="../recipes/persistent-state/" />
+<LinkCard title="Ally labels" description="World projection and screen-space labels." href="../recipes/ally-labels/" />
+<LinkCard title="Camera preview" description="A custom camera and live OutputTexture." href="../recipes/camera-preview/" />
+
+## Custom servers
+
+<LinkCard title="Create a server" description="Invite players, connect configuration, and test modules." href="../servers/custom-server/" />
+<LinkCard title="Server commands" description="Maps, rounds, agents, items, and player management." href="../servers/commands/" />
 
 ## API reference
 
@@ -256,20 +327,3 @@ Choose a section based on what you want to build. If you need to look up a signa
 	description="ScheduleAnimation and Tweener for smooth transitions, stopping, and completion."
 	href="../api/ui-animation/"
 />
-
-## Sections
-
-<CardGrid>
-	<Card title="Getting started" icon="rocket">
-		Module fundamentals: creation, structure, configuration, execution, and debugging.
-	</Card>
-	<Card title="API reference" icon="open-book">
-		An exact list of available objects, properties, methods, types, and execution contexts.
-	</Card>
-	<Card title="Practical guides" icon="puzzle">
-		Step-by-step guides for building complete modules around concrete gameplay tasks.
-	</Card>
-	<Card title="Reflex" icon="seti:lua">
-		Server-side Reflex module logic and communication with the client side.
-	</Card>
-</CardGrid>

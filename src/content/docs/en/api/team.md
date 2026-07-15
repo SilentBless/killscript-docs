@@ -7,7 +7,7 @@ description: Team score, economy, and timeout state.
 This page was verified on July 15, 2026, in KILLSCRIPT Pre-Alpha. Every property and its availability in client and Reflex server contexts were confirmed in game.
 :::
 
-`Team` represents one side in a match. It cannot be constructed directly. Other APIs return it, including `DefusalGame.BridgerFrontTeam` and `DefusalGame.KillScriptCompanyTeam`.
+`Team` represents one side in a match. It cannot be constructed directly. Other APIs return it, including [`DefusalGame.BridgerFrontTeam`](../defusal-game/) and `DefusalGame.KillScriptCompanyTeam`.
 
 ```lua
 local attackers = DefusalGame.BridgerFrontTeam

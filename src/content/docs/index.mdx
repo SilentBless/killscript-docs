@@ -14,23 +14,18 @@ hero:
       variant: minimal
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
 
 ## Всё необходимое для разработки модулей
 
 Документация объясняет API на практических примерах и помогает быстро найти нужное свойство, метод или шаблон решения.
 
 <CardGrid>
-	<Card title="Начало работы" icon="rocket">
-		Создание модуля, структура файлов, запуск кода и работа с игровой консолью.
-	</Card>
-	<Card title="Справочник API" icon="open-book">
-		Свойства, методы, типы, доступ `get`/`set` и ограничения клиентского и серверного контекста.
-	</Card>
-	<Card title="Практические руководства" icon="puzzle">
-		Полные примеры модулей с объяснением ключевых решений и типичных ошибок.
-	</Card>
-	<Card title="Reflex-модули" icon="seti:lua">
-		Связь клиентской и серверной частей, сетевые сообщения и выполнение логики на сервере.
-	</Card>
+	<LinkCard title="Начало работы" description="Создание первого обычного и Reflex-модуля, структура, запуск и отладка." href="./getting-started/overview/" />
+	<LinkCard title="Разработка модулей" description="Редактор, организация Lua-кода, настройки, ввод, ресурсы и локализация." href="./module-development/editor/" />
+	<LinkCard title="Интерфейс" description="ImGui, UXML, интерактивные окна, стили и анимации на практических примерах." href="./interface/choosing-ui/" />
+	<LinkCard title="Reflex-модули" description="Client/server-архитектура, Network, серверные тики и полный пример." href="./reflex/architecture/" />
+	<LinkCard title="Практические рецепты" description="Кнопки, Storage, экранные метки и дополнительная камера." href="./recipes/toggle-action/" />
+	<LinkCard title="Пользовательские серверы" description="Создание сервера, тестирование модулей и консольные команды." href="./servers/custom-server/" />
+	<LinkCard title="Справочник API" description="Свойства, методы, типы, get/set и ограничения контекстов выполнения." href="./api/array/" />
 </CardGrid>

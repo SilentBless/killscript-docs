@@ -25,7 +25,7 @@ if Shop:CanSellItem(itemName) then
 end
 ```
 
-A successful purchase adds the item to `Agents:GetLocalAgent().Inventory`. After buying, `HasBoughtItem()` becomes `true`, while `CanSellItem()` reports whether it can be refunded right now.
+A successful purchase adds the item to [`Agents:GetLocalAgent().Inventory`](../agent/#inventory). After buying, `HasBoughtItem()` becomes `true`, while `CanSellItem()` reports whether it can be refunded right now.
 
 ## BuyItem
 
@@ -52,7 +52,7 @@ Shop:BuyAndDropItem(itemName: string)
 Requests a purchase that should place the item in the world.
 
 :::caution[Confirm the Drop]
-In the current build, a successful call was recorded as a purchase, but no new object appeared in `Drops:GetAll()` or `Drops:GetNearby()`. Do not treat the call as proof that a `Drop` is already exposed through the Lua API.
+In the current build, a successful call was recorded as a purchase, but no new object appeared in [`Drops:GetAll()`](../item/#drops) or `Drops:GetNearby()`. Do not treat the call as proof that a [`Drop`](../item/#drop) is already exposed through the Lua API.
 :::
 
 ## State queries
@@ -80,5 +80,4 @@ Shop:IsBuyLimitReachedForItem(itemName: string): bool
 ```
 
 Returns `true` when the purchase limit for the item has been reached.
-
 

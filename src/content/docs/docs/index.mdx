@@ -3,9 +3,80 @@ title: Документация
 description: Разделы документации KILLSCRIPT для разработчиков модулей.
 ---
 
-import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+import { LinkCard } from '@astrojs/starlight/components';
 
 Выберите раздел в зависимости от задачи. Если нужно быстро уточнить сигнатуру или доступ к свойству, начните со справочника API.
+
+## Начало работы
+
+<LinkCard
+	title="Обзор модулей"
+	description="Обычные и Reflex-модули, папочные проекты, пакеты .KillScript и рекомендуемый путь обучения."
+	href="../getting-started/overview/"
+/>
+
+<LinkCard
+	title="Первый модуль"
+	description="Создание модуля через игру, запуск на карте, консоль, первый Lua-код и hot reload."
+	href="../getting-started/first-module/"
+/>
+
+<LinkCard
+	title="Первый Reflex-модуль"
+	description="Две точки входа, client/server-контексты и первый обмен таблицами через Network."
+	href="../getting-started/first-reflex-module/"
+/>
+
+<LinkCard
+	title="Структура модуля"
+	description="module.json, точки входа, настройки, ввод, ресурсы, теги и ограничения размера."
+	href="../getting-started/module-structure/"
+/>
+
+<LinkCard
+	title="Разработка и отладка"
+	description="Рабочий цикл, фильтры консоли, автоматическая перезагрузка и частые ошибки."
+	href="../getting-started/workflow/"
+/>
+
+<LinkCard
+	title="Импорт и пакеты"
+	description="Чем .KillScript отличается от папки, как импортировать и делать редактируемую копию через Fork."
+	href="../getting-started/packages/"
+/>
+
+## Разработка модулей
+
+<LinkCard title="Редактор и API" description="Открытие проекта, ModuleAPI и восстановление автодополнения." href="../module-development/editor/" />
+<LinkCard title="Организация Lua-кода" description="Локальное состояние, функции, nil-проверки, hot reload и client/server-разделение." href="../module-development/code-organization/" />
+<LinkCard title="Настройки, ввод и данные" description="Как выбирать между Config, InputActions и Storage." href="../module-development/data-and-input/" />
+<LinkCard title="Ресурсы и локализация" description="Изображения, звук, UXML/USS, переводы и подготовка к публикации." href="../module-development/assets/" />
+
+## Интерфейсные руководства
+
+<LinkCard title="Выбор интерфейсного API" description="Когда использовать ImGui, UXML или WorldVisuals." href="../interface/choosing-ui/" />
+<LinkCard title="HUD на ImGui" description="Адаптивный информационный блок на примере здоровья игрока." href="../interface/imgui-hud/" />
+<LinkCard title="Первый интерфейс на UXML" description="Постоянная панель, USS-стили и обновление из Lua." href="../interface/uxml-interface/" />
+<LinkCard title="События, стили и анимации" description="Интерактивное окно, кнопка, захват ввода и плавное появление." href="../interface/interactive-ui/" />
+
+## Reflex-модули
+
+<LinkCard title="Архитектура Reflex" description="Граница client/server, жизненный цикл и ответственность частей." href="../reflex/architecture/" />
+<LinkCard title="Протокол Network" description="Типы сообщений, синхронизация и проверка входных данных." href="../reflex/network-protocol/" />
+<LinkCard title="Серверный цикл" description="OnTick, интервалы, CPU-бюджет и безопасная работа с объектами." href="../reflex/server-loop/" />
+<LinkCard title="Полный Reflex-модуль" description="Готовое предупреждение о здоровье с client/server-кодом." href="../reflex/complete-module/" />
+
+## Практические рецепты
+
+<LinkCard title="Переключатель по кнопке" description="inputs.json, OnPerformed и управляемый HUD." href="../recipes/toggle-action/" />
+<LinkCard title="Сохранение состояния" description="Версионированные данные интерфейса через Storage." href="../recipes/persistent-state/" />
+<LinkCard title="Метки союзников" description="Проекция мировых координат и экранные подписи." href="../recipes/ally-labels/" />
+<LinkCard title="Превью камеры" description="Дополнительная камера и живой OutputTexture." href="../recipes/camera-preview/" />
+
+## Пользовательские серверы
+
+<LinkCard title="Создание сервера" description="Приглашение игроков, конфигурация и цикл тестирования модулей." href="../servers/custom-server/" />
+<LinkCard title="Команды сервера" description="Карты, раунды, агенты, предметы и управление игроками." href="../servers/commands/" />
 
 ## Справочник API
 
@@ -256,20 +327,3 @@ import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
 	description="ScheduleAnimation и Tweener: плавные переходы, остановка и завершение."
 	href="../api/ui-animation/"
 />
-
-## Разделы
-
-<CardGrid>
-	<Card title="Начало работы" icon="rocket">
-		Основы модулей: создание, структура, конфигурация, запуск и отладка.
-	</Card>
-	<Card title="Справочник API" icon="open-book">
-		Точный список доступных объектов, свойств, методов, типов и контекстов выполнения.
-	</Card>
-	<Card title="Практические руководства" icon="puzzle">
-		Пошаговая сборка законченных модулей для конкретных игровых задач.
-	</Card>
-	<Card title="Reflex" icon="seti:lua">
-		Серверная логика Reflex-модулей и обмен данными с клиентской частью.
-	</Card>
-</CardGrid>

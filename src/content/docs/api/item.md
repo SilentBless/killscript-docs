@@ -272,5 +272,6 @@ ThrowableItem:SimulateThrowTrajectory(throwState: EThrowState): Array<Vector3>
 
 **Возвращает:** Array<Vector3>
 
+Связанные типы: [Array](../array/) и [Vector3](../vector3/).
 
 

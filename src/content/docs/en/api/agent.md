@@ -636,4 +636,5 @@ Access to the agent occlusion/visibility system.
 | `SoundRange` | number | `get` | Audible radius of the sound produced by the agent. |
 | `TicksSinceLastVisible` | int | `get` | <span class="api-context api-context--client">Client only</span> Number of ticks since the agent was last visible. |
 
+Related types: [Array](../array/), [Color](../color/), [Vector2](../vector2/), [Vector3](../vector3/), and [Quaternion](../quaternion/).
 

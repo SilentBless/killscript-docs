@@ -61,7 +61,7 @@ Plays a spatial sound at the specified world position. The call returns `nil`.
 | Parameter | Type | Optional | Description |
 |---|---|:---:|---|
 | `sound` | [Sound](../audio/#sound) |  | Loaded sound resource. |
-| `position` | [Vector3](../structs/#vector3) |  | Source position in world coordinates. |
+| `position` | [Vector3](../vector3/) |  | Source position in world coordinates. |
 | `volume` | number | ✅ | Sound volume. |
 | `minDistance` | number | ✅ | Distance within which the sound stays at full volume. |
 | `maxDistance` | number | ✅ | Distance by which the sound fades out. |

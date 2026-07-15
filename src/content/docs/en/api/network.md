@@ -7,7 +7,7 @@ description: Exchange Lua tables between the client and server of a Reflex modul
 This page was verified on July 15, 2026, in KILLSCRIPT Pre-Alpha. Bidirectional transport and the supported value types were confirmed in game.
 :::
 
-`Network` connects the `main.lua` and `server.lua` sides of the same Reflex module. One side sends a Lua table with `SendTable()` and the other receives it through `OnTableReceived()`.
+`Network` connects the `main.lua` and `server.lua` sides of the same [Reflex module](../../reflex/architecture/). One side sends a Lua table with `SendTable()` and the other receives it through `OnTableReceived()`.
 
 ## Quick example
 
@@ -52,7 +52,7 @@ The transport preserves:
 - nested tables;
 - array-like tables such as `{ "first", "second" }`.
 
-`nil`, functions, and API objects such as `Vector3` are not transported. A field containing one of these values is absent on the receiving side.
+`nil`, functions, and API objects such as [`Vector3`](../vector3/) are not transported. A field containing one of these values is absent on the receiving side.
 
 ```lua
 Network:SendTable({
@@ -110,7 +110,7 @@ The method returns `nil`. Sending a table is not a request by itself. If a respo
 
 ## Common mistakes
 
-- sending a `Vector3`, `Agent`, `Texture`, or function directly;
+- sending a [Vector3](../vector3/), [Agent](../agent/), [Texture](../texture/), or function directly;
 - expecting a return value from `SendTable()`;
 - omitting a field that identifies the message type;
 - trusting client-provided data in server game logic without validation.

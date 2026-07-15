@@ -122,3 +122,5 @@ LineRenderer:SetPositions(points: LuaTable)
 | `SetFillBase` | `fillBase: number` | Задаёт базовую плотность заливки. |
 | `SetOcclusionEnabled` | `enabled: bool` | Включает маску перекрытий геометрией. |
 | `SetVisible` | `visible: bool` | Показывает или скрывает область. |
+
+Связанные типы: [Vector3](../vector3/), [Color](../color/) и [Texture](../texture/).

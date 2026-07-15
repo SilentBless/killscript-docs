@@ -61,4 +61,4 @@ local entries = CombatLog.Entries
 All 11 `CombatLogEntry` properties reject assignment. Do not rely on older references that mark these fields as `get/set`.
 :::
 
-`Instigator` and `Victim` may reference player objects. Do not retain these references indefinitely: an agent may become unavailable after a player disconnects or the match changes state.
+`Instigator` and `Victim` may reference [`Agent`](../agent/) objects. Do not retain these references indefinitely: an agent may become unavailable after a player disconnects or the match changes state.

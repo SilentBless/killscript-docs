@@ -150,4 +150,4 @@ A missing action returns `nil`. Check the result before calling a method.
 
 ### Using input from server.lua
 
-A Reflex server does not receive the client's keyboard input. Handle the action in `main.lua`, then send state through `Network` when the server needs it.
+A Reflex server does not receive the client's keyboard input. Handle the action in `main.lua`, then send state through [Network](../network/) when the server needs it.

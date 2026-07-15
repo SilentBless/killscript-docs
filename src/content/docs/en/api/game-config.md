@@ -434,6 +434,8 @@ WeaponPreview.GetWeaponPreview(weaponName: string): Texture
 |---|---|:---:|---|
 | `weaponName` | string |  |  |
 
+Related APIs and types: [Array](../array/), [Color](../color/), [Shop](../shop/), and [Time](../time/).
+
 **Returns:** [Texture](../texture/)
 
 #### RemoveFromCache
@@ -447,7 +449,6 @@ WeaponPreview.RemoveFromCache(weaponName: string)
 | Param | Type | Optional | Comment |
 |---|---|:---:|---|
 | `weaponName` | string |  |  |
-
 
 
 

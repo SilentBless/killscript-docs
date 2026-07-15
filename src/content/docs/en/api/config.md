@@ -168,7 +168,7 @@ Declared settings are available in `server.lua` when the script loads. Its updat
 - it did not update the already-running table in `server.lua`;
 - after a `server.lua` hot reload, the server received the saved values.
 
-Do not assume the server sees a setting change immediately. Reload the server script or explicitly send the value through `Network`.
+Do not assume the server sees a setting change immediately. Reload the server script or explicitly send the value through [Network](../network/).
 
 ## Common mistakes
 

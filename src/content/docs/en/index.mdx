@@ -14,23 +14,18 @@ hero:
       variant: minimal
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
 
 ## Everything you need to build modules
 
 The documentation explains the API through practical examples and helps you quickly find the property, method, or implementation pattern you need.
 
 <CardGrid>
-	<Card title="Getting started" icon="rocket">
-		Create a module, understand its file structure, run code, and use the in-game console.
-	</Card>
-	<Card title="API reference" icon="open-book">
-		Properties, methods, types, `get`/`set` access, and client/server context restrictions.
-	</Card>
-	<Card title="Practical guides" icon="puzzle">
-		Complete module examples with explanations of key decisions and common mistakes.
-	</Card>
-	<Card title="Reflex modules" icon="seti:lua">
-		Client/server communication, network messages, and server-side logic.
-	</Card>
+	<LinkCard title="Getting started" description="Create regular and Reflex modules, understand structure, run code, and debug." href="./getting-started/overview/" />
+	<LinkCard title="Module development" description="Editor setup, Lua organization, settings, input, assets, and localization." href="./module-development/editor/" />
+	<LinkCard title="Interface" description="ImGui, UXML, interactive windows, styles, and animations through practical examples." href="./interface/choosing-ui/" />
+	<LinkCard title="Reflex modules" description="Client/server architecture, Network, server ticks, and a complete example." href="./reflex/architecture/" />
+	<LinkCard title="Practical recipes" description="Input toggles, Storage, ally labels, and a custom camera preview." href="./recipes/toggle-action/" />
+	<LinkCard title="Custom servers" description="Server creation, module testing, and current console commands." href="./servers/custom-server/" />
+	<LinkCard title="API reference" description="Properties, methods, types, get/set access, and execution contexts." href="./api/array/" />
 </CardGrid>

@@ -38,7 +38,7 @@ Storage is isolated by module. Another module does not receive this table.
 
 Unsupported values are silently discarded during serialization.
 
-Store a structure such as `Vector3` as separate numbers:
+Store a structure such as [`Vector3`](../vector3/) as separate numbers:
 
 ```lua
 local position = Vector3.new(10, 2, 5)
@@ -92,7 +92,7 @@ end
 
 ### Storing userdata directly
 
-`Storage.Position = Vector3.one` works in the live Lua table, but the value disappears during serialization. Convert the object to a table of numbers.
+`Storage.Position = Vector3.one` works in the live Lua table, but the value disappears during serialization. Convert the [vector](../vector3/) to a table of numbers.
 
 ### Testing a boolean with if not
 
@@ -103,3 +103,5 @@ if Storage.Enabled == nil then
     Storage.Enabled = true
 end
 ```
+
+Structured values such as [Vector2](../vector2/), [Vector3](../vector3/), and [Color](../color/) must be stored as number tables.

@@ -236,5 +236,6 @@ ThrownProjectiles:GetAll(): Array<ThrownProjectile>
 
 **Возвращает:** Array<[ThrownProjectile](../entity/#thrownprojectile)>
 
+Связанные типы: [Array](../array/) и [Vector3](../vector3/).
 
 

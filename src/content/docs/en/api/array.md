@@ -9,7 +9,7 @@ This page was verified on July 15, 2026, in KILLSCRIPT Pre-Alpha. The behavior w
 
 `Array<T>` is a read-only array returned by many KILLSCRIPT API methods. It is a userdata object, not a regular Lua table.
 
-`T` identifies the element type. For example, `Array<Agent>` contains `Agent` objects, while `Array<Hitbox>` contains `Hitbox` objects.
+`T` identifies the element type. For example, `Array<Agent>` contains [`Agent`](../agent/) objects, while `Array<Hitbox>` contains [`Hitbox`](../agent/#hitbox) objects.
 
 ## Key points
 

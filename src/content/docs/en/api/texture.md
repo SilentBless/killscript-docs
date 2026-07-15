@@ -7,7 +7,7 @@ description: Loading and using images in KILLSCRIPT modules.
 This page was verified on July 15, 2026, in KILLSCRIPT Pre-Alpha. The example and documented limits were confirmed in game.
 :::
 
-The `Textures` API loads images from the current module's `images` directory. A `Texture` object can be displayed through UI or `ImGui`; textures are also returned by other APIs, such as [`Camera.OutputTexture`](../camera/#properties).
+The `Textures` API loads images from the current module's `images` directory. A `Texture` object can be displayed through [UI](../ui/) or [ImGui](../imgui/); textures are also returned by other APIs, such as [`Camera.OutputTexture`](../camera/#properties).
 
 `Textures` is available only in client-side Lua. In a Reflex module's `server.lua`, this global object is `nil`.
 
@@ -148,4 +148,4 @@ In these cases, `GetTexture()` returns `nil`. The limits were confirmed with a c
 
 ### Loading the texture every frame
 
-Get the `Texture` once when the module starts. Inside `Scheduler:OnFrame()`, pass the stored object to your UI code.
+Get the `Texture` once when the module starts. Inside [`Scheduler:OnFrame()`](../scheduler/#onframe), pass the stored object to your [UI](../ui/) code.

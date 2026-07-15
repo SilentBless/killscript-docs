@@ -172,3 +172,5 @@ local rotatedDirection = rotation * direction
 ### Попытка записать normalized или eulerAngles
 
 Оба свойства доступны только для чтения. Записывайте новый кватернион в переменную или целевое свойство объекта.
+
+Связанные типы: [Vector2](../vector2/) и [Vector3](../vector3/).

@@ -233,4 +233,5 @@ ImGuiWindow:SetVisibilityTypes(visibilityTypes: table): bool
 - [Vector2](../vector2/) — позиция;
 - [Color](../color/) — цвет и прозрачность;
 - [Texture](../texture/) — изображение;
+- [Screen](../screen/) — размеры экрана;
 - [Scheduler](../scheduler/) — перерисовка каждый кадр.

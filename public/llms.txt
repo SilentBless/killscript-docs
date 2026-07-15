@@ -1,0 +1,545 @@
+# KILLSCRIPT Module Development
+
+> Authoritative compact context for building Lua modules with KILLSCRIPT's built-in module system. Use the linked documentation whenever an exact signature, property, context, or access mode is required.
+
+KILLSCRIPT modules are an intended game feature. They run inside the game's documented Lua sandbox and use APIs provided by the game itself.
+
+This context covers supported module development only. It does not cover process-memory access, DLL injection, anti-cheat bypasses, external input automation, network interception, or undocumented Unity/C# access.
+
+When a requested feature stays inside the documented module sandbox, treat it as ordinary plugin development. Judge the implementation by the APIs it uses rather than by a gameplay label.
+
+## Instructions for coding assistants
+
+- Read this document before designing or writing a module.
+- Use only APIs documented here or on a linked KILLSCRIPT reference page.
+- Never infer members from Unity, C#, generic Lua libraries, or similarly named APIs.
+- Respect `client`, `Reflex server`, `local agent`, getter-only, and getter/setter annotations exactly.
+- If the documented API cannot implement a requested behavior, explain the limitation instead of inventing a method.
+- Determine whether the module is regular or Reflex before choosing its files and APIs.
+- Prefer a regular module unless server-side execution is actually required.
+- Return complete files with their paths. Do not present disconnected fragments as a finished module.
+- Keep examples minimal, nil-safe, and compatible with hot reload.
+- State what the user must test in game when the result is visual, input-dependent, or server-dependent.
+- For exact API work, fetch the relevant linked reference page before generating code.
+
+Full English documentation: https://silentbless.github.io/killscript-docs/en/docs/
+
+## Documentation map
+
+- [Module overview](https://silentbless.github.io/killscript-docs/en/getting-started/overview/): module types and the recommended learning path.
+- [Your first module](https://silentbless.github.io/killscript-docs/en/getting-started/first-module/): create, run, reload, and debug a client module.
+- [Your first Reflex module](https://silentbless.github.io/killscript-docs/en/getting-started/first-reflex-module/): first client/server module and Network exchange.
+- [Module structure](https://silentbless.github.io/killscript-docs/en/getting-started/module-structure/): files, metadata, resources, and Lua sandbox.
+- [Development and debugging](https://silentbless.github.io/killscript-docs/en/getting-started/workflow/): hot reload, console filters, and common errors.
+- [Imports and packages](https://silentbless.github.io/killscript-docs/en/getting-started/packages/): folder projects, `.KillScript`, Import, and Fork.
+- [Module development](https://silentbless.github.io/killscript-docs/en/module-development/editor/): editor setup and project conventions.
+- [Interface guides](https://silentbless.github.io/killscript-docs/en/interface/choosing-ui/): choose ImGui, UXML, or WorldVisuals.
+- [Reflex architecture](https://silentbless.github.io/killscript-docs/en/reflex/architecture/): client/server responsibilities and lifecycle.
+- [Practical recipes](https://silentbless.github.io/killscript-docs/en/recipes/toggle-action/): complete reusable module patterns.
+- [Custom servers](https://silentbless.github.io/killscript-docs/en/servers/custom-server/): create a test session and use host commands.
+
+## Module model
+
+A regular module has one client entry point:
+
+```text
+MyModule/
+├── module.json
+└── scripts/
+    └── main.lua
+```
+
+A Reflex module adds a server entry point:
+
+```text
+MyModule/
+├── module.json
+└── scripts/
+    ├── main.lua
+    └── server.lua
+```
+
+- `scripts/main.lua` runs on the client after a game session loads.
+- `scripts/server.lua` runs in that player's Reflex server context.
+- Client and Reflex server expose different API sets.
+- Only one Reflex module can be active at a time.
+- Multiple regular modules can run together.
+- Functional tags warn about possible module conflicts but do not prevent activation.
+- A folder under `Modules/MyModule/` is the editable project.
+- `Module.KillScript` is a packaged module with the same internal structure, not a standalone Lua source file.
+- The Import dialog accepts `.KillScript` packages. Copy folder projects directly into `Modules`.
+
+Minimal `module.json`:
+
+```json
+{
+  "Id": "d70e52dc-2fa0-4b53-a040-a36c987b9adb",
+  "Name": "MyModule",
+  "Version": "0.1.0",
+  "Author": "AuthorName",
+  "Description": "Short module description",
+  "IsReflex": false,
+  "Tags": []
+}
+```
+
+Do not reuse the same `Id` across different projects. The in-game Create and Fork flows generate module metadata automatically.
+
+## Optional project files
+
+```text
+MyModule/
+├── module.json
+├── config.json
+├── inputs.json
+├── localization.csv
+├── images/
+├── sounds/
+├── ui/
+├── scripts/
+│   ├── main.lua
+│   └── server.lua
+└── .vscode/
+```
+
+- `config.json`: settings shown in the module settings UI.
+- `inputs.json`: custom actions and their default bindings.
+- `localization.csv`: semicolon-separated translations.
+- `images/`: PNG, JPG, and JPEG textures.
+- `sounds/`: WAV, MP3, and OGG sounds.
+- `ui/`: UXML markup and USS styles.
+- `images/Icon.png`: module icon.
+- `images/DescriptionImage.png`: large module-description image.
+
+General limits:
+
+- One resource file: at most `10 MiB`.
+- Entire module: at most `50 MiB`.
+- `config.json`: at most `64 KiB`.
+- Loaded images: at most `4096 × 4096` pixels.
+
+## Lua sandbox rules
+
+The module environment is not a full system Lua installation.
+
+Available global functions include:
+
+- `print`
+- `tostring`
+- `tonumber`
+- `pairs`
+- `ipairs`
+- `setmetatable`
+
+Available standard tables include:
+
+- `string`
+- `math`
+- `table`
+- `coroutine`
+
+Important omissions:
+
+- `pcall` is unavailable.
+- `type` is unavailable.
+- Do not assume another standard Lua global exists unless documented.
+- Do not use filesystem, operating-system, socket, package-loading, or external-process APIs.
+
+`attempt to call a nil value (global '...')` often means the global is absent from the sandbox.
+
+`Lua access failed for member '...'` means the member is unavailable in that context or does not support the attempted read/write operation.
+
+## API arrays
+
+KILLSCRIPT APIs return userdata arrays rather than ordinary Lua tables.
+
+- Indices run from `1` through `array.Length`.
+- Index `0`, negative indices, and indices above `Length` return `nil`.
+- `array.Length` is getter-only.
+- Elements are getter-only.
+- `ipairs(array)` works.
+- `pairs(array)` does not work.
+- The `#array` length operator does not work.
+
+```lua
+local agents = Agents:GetAll()
+
+for index = 1, agents.Length do
+    local agent = agents[index]
+end
+```
+
+Reference: https://silentbless.github.io/killscript-docs/en/api/array/
+
+## Client and Reflex server contexts
+
+Use this as a routing guide. Individual members can have narrower rules; check their reference pages.
+
+Client-only groups include:
+
+- `InputActions`
+- `Storage`
+- `Localization`
+- `ImGui`
+- `UI`
+- `Cameras`
+- `Textures`
+- `Screen`
+- `Performance`
+- `NetworkInfo`
+- `Physics`
+- `Shop`
+- presentation APIs such as sounds, notifications, pings, chat, and WorldVisuals
+
+Available in both client and Reflex server, with possible member differences:
+
+- `Time`
+- `Scheduler:Schedule()`
+- `Network` in Reflex modules
+- `Agents` and game objects
+- `Config`
+- `CpuLimit`
+- `MapInfo`
+- `DefusalGame`
+- game configuration APIs
+
+Scheduler split:
+
+- `Scheduler:OnFrame(callback)` is client-only.
+- `Scheduler:OnTick(callback)` is Reflex-server-only.
+- `Scheduler:Schedule(delaySeconds, callback)` is available in both contexts.
+- `OnFrame()` and `OnTick()` return an `EventSubscription`; call `subscription:Cancel()` to stop it.
+- `Schedule()` returns `nil`.
+
+Never call client-only APIs from `server.lua`. Missing-member access can terminate the current Lua execution.
+
+Reference: https://silentbless.github.io/killscript-docs/en/api/scheduler/
+
+## Config
+
+`config.json` must contain a JSON array, not an object.
+
+```json
+[
+  {
+    "label": "Enabled",
+    "key": "Enabled",
+    "type": "bool",
+    "value": true
+  },
+  {
+    "label": "Scale",
+    "key": "Scale",
+    "type": "number",
+    "value": 1,
+    "min": 0.5,
+    "max": 2
+  }
+]
+```
+
+Read settings through `Config.Enabled`, `Config.Scale`, and other declared keys.
+
+- Supported setting types include boolean, number, color, enum, and mask enum.
+- Enum values are numeric zero-based indices, not option strings.
+- Mask enums are numeric bit masks.
+- Number values are clamped to declared `min` and `max`.
+- Color values loaded from configuration are clamped to valid components.
+- The client `Config` table is refilled after a settings UI change; do not use it as internal storage.
+- Reflex server receives its own configuration state when loaded. Send live client changes through `Network` when the server must react immediately.
+
+Reference: https://silentbless.github.io/killscript-docs/en/api/config/
+
+## Input actions
+
+`inputs.json` declares module actions:
+
+```json
+{
+  "Actions": [
+    {
+      "Name": "TogglePanel",
+      "Type": "Button",
+      "Binding": {
+        "Path": "<Keyboard>/f8"
+      }
+    }
+  ]
+}
+```
+
+```lua
+local action = InputActions:FindAction("TogglePanel")
+
+if action ~= nil then
+    action:OnPerformed(function()
+        -- Handle the action on the client.
+    end)
+end
+```
+
+- `FindAction()` returns `nil` when a name is not found.
+- `IsPressed()` reports physical pressed state.
+- `OnPerformed()` registers a callback and returns `nil`.
+- `Enable()` and `Disable()` return `nil`.
+- In the current build, `Disable()` does not reliably suppress a previously registered `OnPerformed()` callback. Use an explicit Lua boolean to gate behavior.
+- Input is client-only. Send validated intent through `Network` if Reflex server logic must react.
+
+Reference: https://silentbless.github.io/killscript-docs/en/api/input-action/
+
+## Storage
+
+`Storage` is a client-only Lua table persisted per module.
+
+- Supported values: strings, numbers, booleans, and nested tables made from those values.
+- API userdata such as `Vector3`, `Color`, `Texture`, and `Agent` is not serialized.
+- Split structured values into numbers before storing them.
+- Assigning `nil` removes a key after persistence.
+- `false` is a valid stored value; test initialization with `== nil`.
+- Storage is saved when the module is disabled normally.
+- Hot reload is not a Storage save point.
+
+```lua
+if Storage.Settings == nil then
+    Storage.Settings = {
+        version = 1,
+        visible = true
+    }
+end
+```
+
+Reference: https://silentbless.github.io/killscript-docs/en/api/storage/
+
+## Localization
+
+`localization.csv` uses semicolons:
+
+```csv
+Keys;English (United States);Russian
+PanelTitle;Status;Состояние
+```
+
+- `Localization:GetTranslation(key)` returns the current-language string.
+- An empty current-language cell falls back to English.
+- A missing key returns the key itself rather than `nil`.
+- Localization is client-only.
+
+Reference: https://silentbless.github.io/killscript-docs/en/api/localization/
+
+## Reflex architecture and Network
+
+Use Reflex only when logic needs the server context.
+
+- `main.lua` owns input, local presentation, client settings, and client-only state.
+- `server.lua` owns server-side decisions and authoritative game-object operations.
+- The two files do not share globals or Lua tables.
+- `Network` is the direct channel between them.
+- Register `Network:OnTableReceived()` before sending initial messages.
+- Do not depend on which side finishes loading first.
+- Include a message discriminator such as `kind` in every protocol table.
+- Treat client-provided values as input that must be validated and bounded.
+- `Network:SendTable()` and `Network:OnTableReceived()` return `nil`.
+
+Supported transported values:
+
+- strings
+- numbers
+- booleans, including `false`
+- nested Lua tables
+- sequential Lua tables
+
+Not transported:
+
+- API userdata such as `Agent`, `Vector3`, `Texture`, or `Item`
+- functions
+- `nil` fields
+
+Pack structured values into primitives:
+
+```lua
+Network:SendTable({
+    kind = "position",
+    position = {
+        x = position.x,
+        y = position.y,
+        z = position.z
+    }
+})
+```
+
+References:
+
+- https://silentbless.github.io/killscript-docs/en/reflex/architecture/
+- https://silentbless.github.io/killscript-docs/en/reflex/network-protocol/
+- https://silentbless.github.io/killscript-docs/en/reflex/server-loop/
+- https://silentbless.github.io/killscript-docs/en/api/network/
+
+## Time and server loops
+
+- `Time.Seconds` and `Time.Tick` are getter-only.
+- `Time:TickToSeconds(ticks)` converts ticks to seconds.
+- `Time:SecondsToTick(seconds)` can truncate because of floating-point representation.
+- For a minimum positive duration, calculate ticks with `math.ceil(seconds / Time:TickToSeconds(1))`.
+- Avoid expensive full-world scans on every server tick.
+- Fetch live game objects again after map, round, death, or inventory transitions.
+- `CpuLimit` exposes the current Lua execution budget; it is a last-resort guard, not a substitute for efficient code.
+
+References:
+
+- https://silentbless.github.io/killscript-docs/en/api/time/
+- https://silentbless.github.io/killscript-docs/en/api/cpu-limit/
+
+## Choosing a presentation API
+
+- Use `ImGui` for lightweight text and textures redrawn every frame.
+- Use `UI` with UXML/USS for persistent panels, lists, buttons, forms, and interactive windows.
+- Use `WorldVisuals` for lines and surface areas in world coordinates.
+- Use `Camera` when an independent rendered view is required.
+- These systems can be combined, but avoid presenting the same information through multiple layers.
+
+Guide: https://silentbless.github.io/killscript-docs/en/interface/choosing-ui/
+
+## Compact API directory
+
+The entries below describe purpose and routing, not every member. Fetch the linked page before using an exact signature.
+
+### Core types
+
+- [Array](https://silentbless.github.io/killscript-docs/en/api/array/): read-only, 1-based userdata arrays returned by game APIs.
+- [Color](https://silentbless.github.io/killscript-docs/en/api/color/): mutable RGBA components; direct construction does not clamp values automatically.
+- [Rect](https://silentbless.github.io/killscript-docs/en/api/rect/): mutable 2D rectangle used by ImGui and screen-space APIs.
+- [Vector2](https://silentbless.github.io/killscript-docs/en/api/vector2/): mutable 2D vector, constants, arithmetic, normalization, dot, angle, and distance.
+- [Vector3](https://silentbless.github.io/killscript-docs/en/api/vector3/): mutable 3D vector, world directions, arithmetic, normalization, cross product, and yaw/pitch conversion.
+- [Quaternion](https://silentbless.github.io/killscript-docs/en/api/quaternion/): 3D rotations, look rotation, angle-axis, interpolation, inverse, and vector rotation. Do not assume `eulerAngles` round-trips combined rotations.
+
+### Runtime
+
+- [Time](https://silentbless.github.io/killscript-docs/en/api/time/): current seconds/tick and conversion helpers.
+- [Scheduler](https://silentbless.github.io/killscript-docs/en/api/scheduler/): delayed callbacks, client frames, Reflex server ticks, and cancellable subscriptions.
+- [CpuLimit](https://silentbless.github.io/killscript-docs/en/api/cpu-limit/): getter-only current CPU-cycle and remaining-time budget.
+
+### Module data and input
+
+- [Config](https://silentbless.github.io/killscript-docs/en/api/config/): declared user settings from `config.json`.
+- [InputAction](https://silentbless.github.io/killscript-docs/en/api/input-action/): declared input bindings, pressed state, and performed callbacks.
+- [Storage](https://silentbless.github.io/killscript-docs/en/api/storage/): client-only persistent primitive Lua data.
+- [Localization](https://silentbless.github.io/killscript-docs/en/api/localization/): module and game translations for the current language.
+
+### Environment
+
+- [MapInfo](https://silentbless.github.io/killscript-docs/en/api/map-info/): map name, bounds, center, map-camera height, basement limits, and zones at a world position.
+- [NetworkInfo](https://silentbless.github.io/killscript-docs/en/api/network-info/): client-only ping, RTT, bandwidth, packet loss, interpolation delay, and tick timing.
+- [Performance](https://silentbless.github.io/killscript-docs/en/api/performance/): client-only FPS, frame time, CPU usage, and GPU usage; all getter-only.
+- [Screen](https://silentbless.github.io/killscript-docs/en/api/screen/): client-only getter-only screen width and height.
+
+### Graphics and resources
+
+- [Camera](https://silentbless.github.io/killscript-docs/en/api/camera/): read the main camera, create independent cameras, render to `OutputTexture`, project world positions, activate, resize, and remove custom cameras.
+- [Texture](https://silentbless.github.io/killscript-docs/en/api/texture/): load module images by path. Use the exact filename and extension; cache the result rather than loading every frame.
+- [Audio](https://silentbless.github.io/killscript-docs/en/api/audio/): load module sounds, play 2D or positioned audio, and access documented voice APIs.
+
+Camera warnings:
+
+- `Cameras.Main` is getter-only.
+- `Camera.IsMainCamera` is getter-only.
+- `Camera.OutputTexture` is getter-only.
+- Most transform and projection settings on a `Camera` are getter/setter as documented.
+- A custom camera does not automatically replace the player's view; display its `OutputTexture` through ImGui or UI.
+- `SetActive(false)` pauses custom-camera rendering and leaves the last texture frame available.
+- Do not move `Cameras.Main` to create an independent third-person or preview view; the game camera also affects view and hand presentation and may overwrite transforms.
+
+### Agents and game objects
+
+- [Agent](https://silentbless.github.io/killscript-docs/en/api/agent/): agent queries, identity, team, position, aim, health, movement, inventory, hitboxes, stats, interaction, visibility, input, and combat/death events. Member context varies.
+- [Item](https://silentbless.github.io/killscript-docs/en/api/item/): items, firearm/melee/throwable wrappers, inventory items, drops, trajectories, predicted hits, and bridge charges. Member context varies.
+- [Entity](https://silentbless.github.io/killscript-docs/en/api/entity/): world entity state, thrown projectiles, explosions, planted bridge charges, and related collections.
+- [GameConfig](https://silentbless.github.io/killscript-docs/en/api/game-config/): item definitions, game constants, flags, shop configurations, names, IDs, and icons. Large property groups are getter-only.
+- [Shop](https://silentbless.github.io/killscript-docs/en/api/shop/): client-only buy, sell, buy-and-drop, and purchase-state queries. Command methods return `nil`; inspect inventory and query methods for the result.
+
+Always nil-check objects returned by queries. Objects saved across rounds, deaths, inventory changes, or disconnects can become unavailable.
+
+### Match, combat, and networking
+
+- [Network](https://silentbless.github.io/killscript-docs/en/api/network/): Reflex client/server table transport.
+- [DefusalGame](https://silentbless.github.io/killscript-docs/en/api/defusal-game/): round, stage, bridge-charge, team, timer, overtime, winner, and match-round-log state.
+- [Team](https://silentbless.github.io/killscript-docs/en/api/team/): team economy loss count, round wins, and timeouts; getter-only.
+- [Physics](https://silentbless.github.io/killscript-docs/en/api/physics/): client-only raycast returning a `RaycastHit`; check `HasHit` before using distance or point.
+- [CombatLog](https://silentbless.github.io/killscript-docs/en/api/combat-log/): client-only read-only combat entries for damage, body part, participants, distance, item, and outcome.
+
+### Presentation and communication
+
+- [WorldVisuals](https://silentbless.github.io/killscript-docs/en/api/world-visuals/): client-only line renderers and surface overlays; retain references and remove temporary objects explicitly.
+- [Notification](https://silentbless.github.io/killscript-docs/en/api/notification/): client-only hints, notifications, violations, ping markers, and related events. Event payload fields may be mutable even when other API objects are read-only; follow the page exactly.
+- [Chat](https://silentbless.github.io/killscript-docs/en/api/chat/): client-only channels, messages, local messages, active-channel control, sends, events, and message context menus.
+
+### ImGui
+
+[ImGui](https://silentbless.github.io/killscript-docs/en/api/imgui/) is immediate-mode drawing. Content exists only for the current frame, so persistent visuals must be redrawn from `Scheduler:OnFrame()`.
+
+Use it for:
+
+- debug text
+- positioned text
+- viewport-relative text
+- textures
+- lightweight windows
+
+Related types include `Rect`, `Vector2`, `Color`, `Texture`, `Screen`, and `TextAnchor`.
+
+Guide: https://silentbless.github.io/killscript-docs/en/interface/imgui-hud/
+
+### UI and UXML
+
+- [UXML](https://silentbless.github.io/killscript-docs/en/api/ui/): build persistent UI trees from files or strings, find elements, attach styles, and remove roots.
+- [UI elements](https://silentbless.github.io/killscript-docs/en/api/ui-elements/): element types, text, images, controls, hierarchy, classes, focus, visibility, and events.
+- [UI styles](https://silentbless.github.io/killscript-docs/en/api/ui-style/): layout, dimensions, spacing, colors, backgrounds, borders, opacity, transforms, and overflow.
+- [UI animations](https://silentbless.github.io/killscript-docs/en/api/ui-animation/): timed style/property updates and easing.
+
+Build UXML once and update existing elements. Do not rebuild an entire persistent interface every frame.
+
+Guides:
+
+- https://silentbless.github.io/killscript-docs/en/interface/uxml-interface/
+- https://silentbless.github.io/killscript-docs/en/interface/interactive-ui/
+
+## Practical recipes
+
+- [Toggle action](https://silentbless.github.io/killscript-docs/en/recipes/toggle-action/): toggle a HUD block with a declared input action.
+- [Persistent state](https://silentbless.github.io/killscript-docs/en/recipes/persistent-state/): preserve a local setting with Storage and version migrations.
+- [Ally screen labels](https://silentbless.github.io/killscript-docs/en/recipes/ally-labels/): project ally positions through the main camera and draw labels.
+- [Custom camera preview](https://silentbless.github.io/killscript-docs/en/recipes/camera-preview/): create a custom camera and display its texture safely.
+- [Complete Reflex module](https://silentbless.github.io/killscript-docs/en/reflex/complete-module/): client settings, server tick, health state, and Network synchronization.
+
+## Common failure prevention
+
+- No console output: enter a game session, select the module log section, and enable informational messages using the filter icon next to Search.
+- Nothing runs in the main menu: module Lua starts after a game session loads.
+- `Lua access failed for member`: verify context and getter/setter access on the exact API page.
+- `attempt to call a nil value`: verify that the function exists in the sandbox.
+- JSON deserialize error: verify the required root shape, especially the array required by `config.json`.
+- Input action is `nil`: ensure the `inputs.json` name and `FindAction()` name match exactly.
+- Sharing violation during hot reload: let the editor finish writing, then save again; avoid tools that hold the file open.
+- Reflex does not start: require `IsReflex: true`, `scripts/server.lua`, and selection as the single active Reflex module.
+- Network field is missing: it was likely `nil`, a function, or API userdata and was omitted during transport.
+- Storage value disappears after reload: hot reload does not persist the current table; disable the module normally to save it.
+- A visual disappears: immediate-mode ImGui content must be drawn every frame.
+- A custom camera shows no view: display `OutputTexture`; `SetActive(true)` alone does not replace the main view.
+- A world object leaks across reload logic: keep its reference and remove it through the documented removal method when no longer needed.
+
+## Expected answer format for module requests
+
+When producing a complete module, use this order:
+
+1. State whether it is a regular or Reflex module and why.
+2. Show the complete file tree.
+3. Provide every required file in a separate code block with its exact path.
+4. Use only documented APIs and exact member casing.
+5. Add nil checks around game-object queries.
+6. Explain activation, input bindings, and in-game verification.
+7. Call out any behavior that requires a visual or multiplayer test.
+
+Do not claim a feature works merely because code is syntactically plausible. If exact behavior depends on game state, state the required test conditions.
+
+## Final authority rule
+
+This file is intentionally compact. A linked API page is authoritative for exact signatures, contexts, return values, mutability, and known runtime behavior. When this overview is insufficient, fetch that page rather than guessing.

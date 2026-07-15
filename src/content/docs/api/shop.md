@@ -25,7 +25,7 @@ if Shop:CanSellItem(itemName) then
 end
 ```
 
-Успешная покупка добавляет предмет в `Agents:GetLocalAgent().Inventory`. После покупки `HasBoughtItem()` становится `true`, а `CanSellItem()` показывает, можно ли вернуть предмет прямо сейчас.
+Успешная покупка добавляет предмет в [`Agents:GetLocalAgent().Inventory`](../agent/#inventory). После покупки `HasBoughtItem()` становится `true`, а `CanSellItem()` показывает, можно ли вернуть предмет прямо сейчас.
 
 ## BuyItem
 
@@ -52,7 +52,7 @@ Shop:BuyAndDropItem(itemName: string)
 Отправляет запрос на покупку предмета с выбросом в мир.
 
 :::caution[Проверяйте появление Drop]
-В текущей сборке успешный вызов учитывался как покупка, но новый объект не появился в `Drops:GetAll()` или `Drops:GetNearby()`. Не считайте вызов гарантией того, что `Drop` уже доступен через Lua API.
+В текущей сборке успешный вызов учитывался как покупка, но новый объект не появился в [`Drops:GetAll()`](../item/#drops) или `Drops:GetNearby()`. Не считайте вызов гарантией того, что [`Drop`](../item/#drop) уже доступен через Lua API.
 :::
 
 ## Проверки состояния
@@ -80,5 +80,4 @@ Shop:IsBuyLimitReachedForItem(itemName: string): bool
 ```
 
 Возвращает `true`, если достигнут лимит покупок этого предмета.
-
 

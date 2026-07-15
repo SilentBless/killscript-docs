@@ -172,3 +172,5 @@ Use `{ x = 1, y = 0, z = 0 }`, not `{ 1, 0, 0 }`.
 ### Assigning normalized or eulerAngles
 
 Both properties are read-only. Store a new quaternion in a variable or assign it to the target object's rotation property.
+
+Related types: [Vector2](../vector2/) and [Vector3](../vector3/).

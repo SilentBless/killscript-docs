@@ -7,7 +7,7 @@ description: Счёт, экономика и тайм-ауты команды в
 Раздел проверен 15 июля 2026 года в KILLSCRIPT Pre-Alpha. Все свойства и их доступность в client и Reflex server подтверждены в игре.
 :::
 
-`Team` представляет одну из команд матча. Объект нельзя создать вручную: его возвращают другие API, например `DefusalGame.BridgerFrontTeam` и `DefusalGame.KillScriptCompanyTeam`.
+`Team` представляет одну из команд матча. Объект нельзя создать вручную: его возвращают другие API, например [`DefusalGame.BridgerFrontTeam`](../defusal-game/) и `DefusalGame.KillScriptCompanyTeam`.
 
 ```lua
 local attackers = DefusalGame.BridgerFrontTeam

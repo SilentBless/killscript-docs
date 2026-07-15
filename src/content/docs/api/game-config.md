@@ -434,6 +434,8 @@ WeaponPreview.GetWeaponPreview(weaponName: string): Texture
 |---|---|:---:|---|
 | `weaponName` | string |  |  |
 
+Связанные API и типы: [Array](../array/), [Color](../color/) и [Shop](../shop/).
+
 **Возвращает:** [Texture](../texture/)
 
 #### RemoveFromCache
@@ -447,7 +449,6 @@ WeaponPreview.RemoveFromCache(weaponName: string)
 | Параметр | Тип | Необязательный | Описание |
 |---|---|:---:|---|
 | `weaponName` | string |  |  |
-
 
 
 

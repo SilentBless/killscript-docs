@@ -9,7 +9,7 @@ description: Массивы, которые возвращает Lua API KILLSCR
 
 `Array<T>` — массив только для чтения, который возвращают многие методы KILLSCRIPT API. Это userdata-объект, а не обычная Lua-таблица.
 
-`T` обозначает тип элемента. Например, `Array<Agent>` содержит объекты `Agent`, а `Array<Hitbox>` — объекты `Hitbox`.
+`T` обозначает тип элемента. Например, `Array<Agent>` содержит объекты [`Agent`](../agent/), а `Array<Hitbox>` — объекты [`Hitbox`](../agent/#hitbox).
 
 ## Главное
 

@@ -209,3 +209,5 @@ Data for a created ping. Every field supports reading and assignment (`get/set`)
 | `Mine` | `0` | Local player's ping. |
 | `Party` | `1` | Party member's ping. |
 | `Ally` | `2` | Ally's ping. |
+
+Related types: [Color](../color/), [Vector3](../vector3/), and [Team](../team/).

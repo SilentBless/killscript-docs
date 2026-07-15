@@ -7,7 +7,7 @@ description: RGBA colors in the KILLSCRIPT Lua API.
 This page was verified on July 15, 2026, in KILLSCRIPT Pre-Alpha. The type is available in regular modules and in Reflex module `server.lua` files.
 :::
 
-`Color` stores the red, green, blue, and alpha components of a color. It is used by UI, `ImGui`, visual effects, and other APIs that accept a color.
+`Color` stores the red, green, blue, and alpha components of a color. It is used by [UI](../ui/), [ImGui](../imgui/), [WorldVisuals](../world-visuals/), and other APIs that accept a color.
 
 ## Quick example
 

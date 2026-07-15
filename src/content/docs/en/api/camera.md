@@ -7,7 +7,7 @@ description: Main and custom cameras in the KILLSCRIPT Lua API.
 This page was verified on July 15, 2026, in KILLSCRIPT Pre-Alpha. Every documented access mode and example was confirmed in game.
 :::
 
-The `Camera` API lets you inspect the scene's main camera and create additional cameras. A custom camera renders into a texture that can be displayed through UI or `ImGui`.
+The `Camera` API lets you inspect the scene's main camera and create additional cameras. A custom camera renders into a texture that can be displayed through [UI](../ui/) or [ImGui](../imgui/).
 
 This entire API is client-only. In a Reflex module's `server.lua`, the global `Cameras` object is `nil`.
 
@@ -178,7 +178,7 @@ camera.OutputTexture = texture
 
 ### Expecting the main view to switch automatically
 
-`camera:SetActive(true)` starts the custom camera's renderer but does not replace the main camera's image. Display `camera.OutputTexture` through a UI element or `ImGui:DrawTexture()`.
+`camera:SetActive(true)` starts the custom camera's renderer but does not replace the main camera's image. Display `camera.OutputTexture` through a [UI element](../ui-elements/) or [`ImGui:DrawTexture()`](../imgui/#drawtexture).
 
 ### Using a point behind the camera
 
