@@ -33,6 +33,7 @@ Full English documentation: https://silentbless.github.io/killscript-docs/en/doc
 - [Development and debugging](https://silentbless.github.io/killscript-docs/en/getting-started/workflow/): hot reload, console filters, and common errors.
 - [Imports and packages](https://silentbless.github.io/killscript-docs/en/getting-started/packages/): folder projects, `.KillScript`, Import, and Fork.
 - [Module development](https://silentbless.github.io/killscript-docs/en/module-development/editor/): editor setup and project conventions.
+- [Vibe-coding workflow](https://silentbless.github.io/killscript-docs/en/vibe-coding/overview/): how a user and coding assistant should collaborate on a module.
 - [Interface guides](https://silentbless.github.io/killscript-docs/en/interface/choosing-ui/): choose ImGui, UXML, or WorldVisuals.
 - [Reflex architecture](https://silentbless.github.io/killscript-docs/en/reflex/architecture/): client/server responsibilities and lifecycle.
 - [Practical recipes](https://silentbless.github.io/killscript-docs/en/recipes/toggle-action/): complete reusable module patterns.

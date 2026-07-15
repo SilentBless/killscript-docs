@@ -50,6 +50,16 @@ export default defineConfig({
 					],
 				},
 				{
+					label: 'Вайбкодинг',
+					translations: { en: 'Vibe coding' },
+					collapsed: true,
+					items: [
+						{ slug: 'vibe-coding/overview' },
+						{ slug: 'vibe-coding/context' },
+						{ slug: 'vibe-coding/workflow' },
+					],
+				},
+				{
 					label: 'Разработка модулей',
 					translations: { en: 'Module development' },
 					collapsed: true,
