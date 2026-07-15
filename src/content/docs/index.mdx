@@ -1,0 +1,36 @@
+---
+title: Документация KILLSCRIPT
+description: Проверенная документация по Lua API игры KILLSCRIPT.
+template: splash
+hero:
+  tagline: Проверенная документация по Lua API игры KILLSCRIPT
+  actions:
+    - text: Как мы проверяем API
+      link: ./about/verification/
+      icon: right-arrow
+    - text: GitHub
+      link: https://github.com/SilentBless/killscript-docs
+      icon: seti:github
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Документация, которой можно доверять
+
+Мы не переносим старые страницы автоматически. Каждый раздел сначала проверяется непосредственно в игре: свойства, методы, контексты выполнения и примеры.
+
+<CardGrid stagger>
+	<Card title="Учитесь с нуля" icon="open-book">
+		Последовательные уроки объяснят устройство модулей и основные концепции без расчёта на предыдущий опыт.
+	</Card>
+	<Card title="Решайте конкретные задачи" icon="rocket">
+		Практические руководства будут строиться вокруг готового результата и полного рабочего кода.
+	</Card>
+	<Card title="Проверяйте API" icon="approve-check">
+		Справочник будет явно показывать тип, доступ `get`/`set`, контекст и фактическое поведение каждого элемента.
+	</Card>
+	<Card title="Копируйте рабочие примеры" icon="puzzle">
+		В документацию попадут только примеры, которые были запущены и проверены в актуальной версии игры.
+	</Card>
+</CardGrid>
