@@ -92,6 +92,18 @@ export default defineConfig({
 							collapsed: false,
 							items: [{ slug: 'api/camera' }, { slug: 'api/texture' }],
 						},
+						{
+							label: 'Матч и сеть',
+							translations: { en: 'Match and networking' },
+							collapsed: false,
+							items: [
+								{ slug: 'api/network' },
+								{ slug: 'api/defusal-game' },
+								{ slug: 'api/team' },
+								{ slug: 'api/physics' },
+								{ slug: 'api/combat-log' },
+							],
+						},
 					],
 				},
 			],
