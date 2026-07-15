@@ -65,8 +65,8 @@ Represents either the main camera or a custom camera. Camera objects are not con
 | `NearClipPlane` | `number` | `get/set` | Near clipping plane in metres. |
 | `OrthographicSize` | `number` | `get/set` | Orthographic camera size. Used when `IsOrthographic = true`. |
 | `OutputTexture` | [`Texture`](../texture/) \| `nil` | `get` | The custom camera's output texture. Returns `nil` for the main camera. |
-| `Position` | `Vector3` | `get/set` | Camera position in world space. |
-| `Rotation` | `Quaternion` | `get/set` | Camera rotation in world space. |
+| `Position` | [`Vector3`](../vector3/) | `get/set` | Camera position in world space. |
+| `Rotation` | [`Quaternion`](../quaternion/) | `get/set` | Camera rotation in world space. |
 
 :::caution[The game controls the main camera]
 The main camera's setters work, but game logic may write its own values on the next frame. Changing `Position` or `Rotation` moves the main view together with the first-person hands; it does not create a third-person view. Create a custom camera for an independent view.

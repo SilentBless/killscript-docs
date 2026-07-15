@@ -7,13 +7,47 @@ import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
 Выберите раздел в зависимости от задачи. Если нужно быстро уточнить сигнатуру или доступ к свойству, начните со справочника API.
 
-## Доступные материалы
+## Справочник API
+
+### Базовые типы
 
 <LinkCard
 	title="Array"
 	description="Массивы API, индексация с 1, Length, обход элементов и отличия от обычных Lua-таблиц."
 	href="../api/array/"
 />
+
+<LinkCard
+	title="Color"
+	description="RGBA-компоненты цвета, конструкторы, изменение значений и отсутствие автоматического clamp."
+	href="../api/color/"
+/>
+
+<LinkCard
+	title="Rect"
+	description="Позиция, размер, границы и центр прямоугольных областей."
+	href="../api/rect/"
+/>
+
+<LinkCard
+	title="Vector2"
+	description="Двумерные точки и направления, длина, нормализация, расстояние и углы."
+	href="../api/vector2/"
+/>
+
+<LinkCard
+	title="Vector3"
+	description="Мировые позиции и направления, готовые оси, векторные операции, yaw и pitch."
+	href="../api/vector3/"
+/>
+
+<LinkCard
+	title="Quaternion"
+	description="Трёхмерные вращения, Euler-углы, интерполяция, операторы и важные ограничения."
+	href="../api/quaternion/"
+/>
+
+### Графика
 
 <LinkCard
 	title="Camera"

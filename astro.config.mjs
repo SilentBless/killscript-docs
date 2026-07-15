@@ -40,11 +40,31 @@ export default defineConfig({
 					translations: { en: 'Documentation' },
 					items: [{ slug: 'docs' }],
 				},
-				{
-					label: 'Справочник API',
-					translations: { en: 'API reference' },
-					items: [{ slug: 'api/array' }, { slug: 'api/camera' }, { slug: 'api/texture' }],
-				},
+			{
+				label: 'Справочник API',
+				translations: { en: 'API reference' },
+				items: [
+					{
+						label: 'Базовые типы',
+						translations: { en: 'Core types' },
+						collapsed: false,
+						items: [
+							{ slug: 'api/array' },
+							{ slug: 'api/color' },
+							{ slug: 'api/rect' },
+							{ slug: 'api/vector2' },
+							{ slug: 'api/vector3' },
+							{ slug: 'api/quaternion' },
+						],
+					},
+					{
+						label: 'Графика',
+						translations: { en: 'Graphics' },
+						collapsed: false,
+						items: [{ slug: 'api/camera' }, { slug: 'api/texture' }],
+					},
+				],
+			},
 			],
 		}),
 	],
