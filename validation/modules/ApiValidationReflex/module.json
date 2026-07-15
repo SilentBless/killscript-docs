@@ -1,7 +1,7 @@
 {
-  "Id": "6d14527c-f2c7-47c8-9a35-5eebd9205a87",
+  "Id": "c8fefe2a-1661-4c82-8712-b9704cc6f3c8",
   "Name": "ApiValidationReflex",
-  "Version": "0.1.0",
+  "Version": "0.0.1",
   "Author": "SilentBless",
   "Description": "Внутренний стенд проверки Reflex Lua API.",
   "IsReflex": true,

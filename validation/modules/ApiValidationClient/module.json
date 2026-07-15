@@ -1,7 +1,7 @@
 {
-  "Id": "90268945-1b5c-4bb4-8107-ffa1cac09b33",
+  "Id": "9085e3de-b002-43ad-b5ed-83efec12eca6",
   "Name": "ApiValidationClient",
-  "Version": "0.1.0",
+  "Version": "0.0.1",
   "Author": "SilentBless",
   "Description": "Внутренний стенд проверки клиентского Lua API.",
   "IsReflex": false,
