@@ -40,7 +40,7 @@ MyModule/
 | `inputs.json` | Собственные действия и начальные привязки ввода. |
 | `localization.csv` | Строки модуля на разных языках. |
 
-Подробные форматы дополнительных файлов описаны на страницах [Config](../../api/config/), [InputAction](../../api/input-action/) и [Localization](../../api/localization/). Разделение `main.lua` и `server.lua` разобрано в [архитектуре Reflex](../../reflex/architecture/).
+Подробные форматы дополнительных файлов описаны на страницах [Config](../../api/config/), [InputAction](../../api/input-action/) и [Localization](../../api/localization/). Разделение `main.lua` и `server.lua` разобрано в [архитектуре Reflex](../../reflex/architecture/), а подключение дополнительных клиентских файлов — в [организации Lua-кода](../../module-development/code-organization/#разделяйте-клиентский-код-на-файлы).
 
 ## module.json
 
@@ -123,6 +123,7 @@ MyModule/
 Код работает в ограниченной Lua-среде, а не в полном системном Lua. Доступны игровые глобальные объекты и небольшой набор стандартных возможностей:
 
 - функции `print`, `tostring`, `tonumber`, `pairs`, `ipairs`, `setmetatable`;
+- клиентский `require` для [дополнительных файлов из `scripts/`](../../module-development/code-organization/#разделяйте-клиентский-код-на-файлы);
 - таблицы `string`, `math`, `table`, `coroutine`.
 
 Не рассчитывайте на остальные стандартные глобальные функции без проверки. В частности, `pcall` и `type` недоступны. Доступность игрового API также зависит от клиентского или Reflex server-контекста.

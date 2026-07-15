@@ -42,6 +42,25 @@ main.lua  ◀─ SendTable ──  server.lua
 
 Messages are serialized, so only strings, numbers, booleans, and nested tables cross the boundary. API objects do not.
 
+## Do not route decisions through the client
+
+When a decision can be derived from state available to the server, keep the complete loop in `server.lua`:
+
+```text
+server state → server decision → server action
+                              └→ client presentation
+```
+
+The `server state → client decision → server action` path adds a network round trip. The original state may already be stale when the command returns. This matters for movement, simulated button state, server-side look direction, aim targets, firing, and other tick-sensitive behavior.
+
+[`InputActions`](../../api/input-action/) are client-only, so a custom binding may send a mode activation, deactivation, or setting change to the server. After that, keep observation, timing, and supported mutations through [`AgentInput` and `Aim`](../../api/agent/#agentinput) on the server. Do not stream commands every frame when one mode-state message is sufficient.
+
+Send only the result required for UI, cameras, audio, or other local feedback back to the client. The server must not wait for client confirmation when it can make the decision itself.
+
+:::caution
+If the required read or mutation is unavailable in the Reflex server API, a client-side implementation is not an equivalent substitute. State the limitation and choose a different design.
+:::
+
 ## Lifecycle
 
 1. The user enables and selects a Reflex module.

@@ -242,6 +242,25 @@ Melee weapon as an inventory item.
 | `Config` | [ConfigItemMelee](../game-config/#configitemmelee) | `get` | Melee weapon configuration. Returns nil if the configuration is unavailable. |
 
 
+### Methods
+
+#### HitscanMelee
+
+```lua
+MeleeItem:HitscanMelee(firePosition: Vector3, direction: Vector3, distance: number): HitscanHit
+```
+
+Simulates a melee strike from the specified position in the specified direction and returns the hit, or nil if there is no hit.
+
+| Parameter | Type | Optional | Description |
+|---|---|:---:|---|
+| `firePosition` | Vector3 |  | Strike position. For an agent, use `Aim.Position`. |
+| `direction` | Vector3 |  | Strike direction. For an agent, use `Aim.Direction`. |
+| `distance` | number |  | Maximum simulation distance. `ConfigItemMelee.StrongAttackMaxHitDistance` is a suitable value. |
+
+**Returns:** [HitscanHit](../item/#hitscanhit) or `nil`
+
+
 ## ThrowableItem
 
 Throwable item (grenade) as an inventory item.
@@ -273,5 +292,4 @@ ThrowableItem:SimulateThrowTrajectory(throwState: EThrowState): Array<Vector3>
 **Returns:** Array<Vector3>
 
 Related types: [Array](../array/) and [Vector3](../vector3/).
-
 

@@ -40,7 +40,7 @@ MyModule/
 | `inputs.json` | Custom actions and their initial bindings. |
 | `localization.csv` | Module strings in multiple languages. |
 
-See [Config](../../api/config/), [InputAction](../../api/input-action/), and [Localization](../../api/localization/) for the optional file formats. The roles of `main.lua` and `server.lua` are explained in [Reflex architecture](../../reflex/architecture/).
+See [Config](../../api/config/), [InputAction](../../api/input-action/), and [Localization](../../api/localization/) for the optional file formats. The roles of `main.lua` and `server.lua` are explained in [Reflex architecture](../../reflex/architecture/), while [organizing Lua code](../../module-development/code-organization/#split-client-code-into-files) covers additional client files.
 
 ## module.json
 
@@ -123,6 +123,7 @@ Individual APIs may apply additional limits. The texture loader, for example, al
 Module code runs in a restricted Lua environment rather than a full system Lua installation. It includes game globals and a small standard subset:
 
 - functions: `print`, `tostring`, `tonumber`, `pairs`, `ipairs`, `setmetatable`;
+- client-side `require` for [additional files under `scripts/`](../../module-development/code-organization/#split-client-code-into-files);
 - libraries: `string`, `math`, `table`, `coroutine`.
 
 Do not assume that other standard globals exist. In particular, `pcall` and `type` are unavailable. Game API availability also differs between the client and Reflex server contexts.

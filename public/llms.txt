@@ -33,6 +33,7 @@ Full English documentation: https://silentbless.github.io/killscript-docs/en/doc
 - [Development and debugging](https://silentbless.github.io/killscript-docs/en/getting-started/workflow/): hot reload, console filters, and common errors.
 - [Imports and packages](https://silentbless.github.io/killscript-docs/en/getting-started/packages/): folder projects, `.KillScript`, Import, and Fork.
 - [Module development](https://silentbless.github.io/killscript-docs/en/module-development/editor/): editor setup and project conventions.
+- [Organizing Lua code](https://silentbless.github.io/killscript-docs/en/module-development/code-organization/): client-side `require`, layered code, lifecycle, and Reflex file boundaries.
 - [Vibe-coding workflow](https://silentbless.github.io/killscript-docs/en/vibe-coding/overview/): how a user and coding assistant should collaborate on a module.
 - [Interface guides](https://silentbless.github.io/killscript-docs/en/interface/choosing-ui/): choose ImGui, UXML, or WorldVisuals.
 - [Reflex architecture](https://silentbless.github.io/killscript-docs/en/reflex/architecture/): client/server responsibilities and lifecycle.
@@ -62,6 +63,10 @@ MyModule/
 
 - `scripts/main.lua` runs on the client after a game session loads.
 - `scripts/server.lua` runs in that player's Reflex server context.
+- Client code may use additional Lua files placed directly under `scripts/`. Load `scripts/domain.lua` as `require("domain")`.
+- Do not add `.lua` or `scripts/` to a module name passed to `require`.
+- Nested script directories are not supported: `scripts/domain/player.lua`, `require("domain.player")`, and `require("domain/player")` do not load.
+- Reflex server code is transported as one `server.lua`; extra client script files are unavailable there. Keep server layers local to `server.lua`, or bundle them into that file before packaging.
 - Client and Reflex server expose different API sets.
 - Only one Reflex module can be active at a time.
 - Multiple regular modules can run together.
@@ -85,6 +90,36 @@ Minimal `module.json`:
 ```
 
 Do not reuse the same `Id` across different projects. The in-game Create and Fork flows generate module metadata automatically.
+
+## Client architecture requirements
+
+For any non-trivial client module, keep `scripts/main.lua` as a small composition root. It should load components, create shared state, connect top-level callbacks, and start the module. Do not place input handling, game-object queries, state transitions, UI rendering, and every helper in one large `main.lua`.
+
+Split code by cohesive responsibility when the feature needs it. A typical flat layout is:
+
+```text
+scripts/
+├── main.lua           # composition and lifecycle
+├── state.lua          # client state and state transitions
+├── agent_service.lua  # KILLSCRIPT API access
+├── controller.lua     # input and feature coordination
+└── hud.lua            # presentation
+```
+
+Architecture rules for generated client code:
+
+- Keep related functions together behind a table returned by the file.
+- Put reusable calculations and transformations in focused helpers or domain modules.
+- Isolate repeated KILLSCRIPT API queries in a service or gateway when this makes dependencies clearer.
+- Keep presentation code separate from state and game-query logic once either becomes substantial.
+- Make dependencies explicit with top-level `require("name")` calls or constructor arguments; avoid accidental globals.
+- Keep subscriptions and removable object references owned by the component responsible for their lifecycle.
+- Do not create vague dumping grounds such as a large `utils.lua`; name files after a clear responsibility.
+- Do not split a tiny module into one-function files. One `main.lua` remains appropriate for genuinely small examples.
+- All required client files must remain directly under `scripts/`; the loader does not support nested script directories.
+- This multi-file rule does not apply to Reflex server runtime code, which must remain in or be bundled into `server.lua`.
+
+When returning a complete non-trivial module, show this file structure and provide the full content of every referenced file. Never hide required helpers behind placeholders.
 
 ## Optional project files
 
@@ -131,6 +166,7 @@ Available global functions include:
 - `pairs`
 - `ipairs`
 - `setmetatable`
+- `require` for additional top-level client files under `scripts/`
 
 Available standard tables include:
 
@@ -341,6 +377,20 @@ Use Reflex only when logic needs the server context.
 - Treat client-provided values as input that must be validated and bounded.
 - `Network:SendTable()` and `Network:OnTableReceived()` return `nil`.
 
+### Keep gameplay decisions on the server
+
+Any decision that can be derived from authoritative game state and changes simulated agent or world behavior must run in `server.lua`, normally inside `Scheduler:OnTick()`. This includes continuous movement overrides, simulated look or button state, aim targets, firing decisions, and similar timing-sensitive behavior when the documented server API supports it.
+
+- Do not send server state to `main.lua`, decide there, and send an action back. That adds a network round trip and makes the decision operate on older state.
+- Do not make the server wait for a client confirmation before applying a decision it can make itself.
+- Send the result to the client only when UI, audio, camera work, or another local presentation needs to reflect it.
+- `InputActions` and custom bindings are client-only. The client may send an activation edge, selected mode, or changed setting once; after that, keep continuous observation, timing, and action on the server.
+- Do not stream per-frame client commands when a compact enabled/disabled or configuration message lets the server own the loop.
+- Apply supported agent-control changes through documented Reflex-server APIs such as `AgentInput` or `Aim`, not through a client `OnFrame()` loop.
+- If the required state or mutation has no documented server API, report the limitation instead of moving an authoritative decision to the client and presenting it as equivalent.
+
+Think of `main.lua` as input/configuration plus presentation, and `server.lua` as observation, decision, and simulation-side action.
+
 Supported transported values:
 
 - strings
@@ -452,7 +502,7 @@ Camera warnings:
 ### Agents and game objects
 
 - [Agent](https://silentbless.github.io/killscript-docs/en/api/agent/): agent queries, identity, team, position, aim, health, movement, inventory, hitboxes, stats, interaction, visibility, input, and combat/death events. Member context varies.
-- [Item](https://silentbless.github.io/killscript-docs/en/api/item/): items, firearm/melee/throwable wrappers, inventory items, drops, trajectories, predicted hits, and bridge charges. Member context varies.
+- [Item](https://silentbless.github.io/killscript-docs/en/api/item/): items, firearm/melee/throwable wrappers, inventory items, firearm and melee hit simulation, drops, trajectories, predicted hits, and bridge charges. Member context varies.
 - [Entity](https://silentbless.github.io/killscript-docs/en/api/entity/): world entity state, thrown projectiles, explosions, planted bridge charges, and related collections.
 - [GameConfig](https://silentbless.github.io/killscript-docs/en/api/game-config/): item definitions, game constants, flags, shop configurations, names, IDs, and icons. Large property groups are getter-only.
 - [Shop](https://silentbless.github.io/killscript-docs/en/api/shop/): client-only buy, sell, buy-and-drop, and purchase-state queries. Command methods return `nil`; inspect inventory and query methods for the result.
@@ -533,11 +583,12 @@ When producing a complete module, use this order:
 
 1. State whether it is a regular or Reflex module and why.
 2. Show the complete file tree.
-3. Provide every required file in a separate code block with its exact path.
-4. Use only documented APIs and exact member casing.
-5. Add nil checks around game-object queries.
-6. Explain activation, input bindings, and in-game verification.
-7. Call out any behavior that requires a visual or multiplayer test.
+3. For non-trivial client code, keep `main.lua` as the composition root and split cohesive responsibilities into top-level files under `scripts/`.
+4. Provide every required file in a separate code block with its exact path.
+5. Use only documented APIs and exact member casing.
+6. Add nil checks around game-object queries.
+7. Explain activation, input bindings, and in-game verification.
+8. Call out any behavior that requires a visual or multiplayer test.
 
 Do not claim a feature works merely because code is syntactically plausible. If exact behavior depends on game state, state the required test conditions.
 

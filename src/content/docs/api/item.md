@@ -242,6 +242,25 @@ Items:GetAllBridgeCharges(): Array<BridgeChargeItem>
 | `Config` | [ConfigItemMelee](../game-config/#configitemmelee) | `get` | Конфигурация холодного оружия. Возвращает nil, если конфигурация недоступна. |
 
 
+### Методы
+
+#### HitscanMelee
+
+```lua
+MeleeItem:HitscanMelee(firePosition: Vector3, direction: Vector3, distance: number): HitscanHit
+```
+
+Проводит симуляцию удара из указанной позиции в указанном направлении и возвращает попадание или nil, если попадания нет.
+
+| Параметр | Тип | Необязательный | Описание |
+|---|---|:---:|---|
+| `firePosition` | Vector3 |  | Позиция удара. Для агента можно использовать `Aim.Position`. |
+| `direction` | Vector3 |  | Направление удара. Для агента можно использовать `Aim.Direction`. |
+| `distance` | number |  | Максимальная дистанция симуляции. Можно использовать `ConfigItemMelee.StrongAttackMaxHitDistance`. |
+
+**Возвращает:** [HitscanHit](../item/#hitscanhit) или `nil`
+
+
 ## ThrowableItem
 
 Метательный предмет (граната) как элемент инвентаря.
@@ -273,5 +292,4 @@ ThrowableItem:SimulateThrowTrajectory(throwState: EThrowState): Array<Vector3>
 **Возвращает:** Array<Vector3>
 
 Связанные типы: [Array](../array/) и [Vector3](../vector3/).
-
 
