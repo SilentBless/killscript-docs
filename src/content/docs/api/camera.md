@@ -64,7 +64,7 @@ end
 | `IsOrthographic` | `bool` | `get/set` | Включена ли ортографическая проекция. |
 | `NearClipPlane` | `number` | `get/set` | Ближняя плоскость отсечения в метрах. |
 | `OrthographicSize` | `number` | `get/set` | Размер ортографической камеры. Используется при `IsOrthographic = true`. |
-| `OutputTexture` | `Texture \| nil` | `get` | Текстура пользовательской камеры. У главной камеры возвращает `nil`. |
+| `OutputTexture` | [`Texture`](../texture/) \| `nil` | `get` | Текстура пользовательской камеры. У главной камеры возвращает `nil`. |
 | `Position` | `Vector3` | `get/set` | Позиция камеры в мировых координатах. |
 | `Rotation` | `Quaternion` | `get/set` | Вращение камеры в мировых координатах. |
 

@@ -64,7 +64,7 @@ Represents either the main camera or a custom camera. Camera objects are not con
 | `IsOrthographic` | `bool` | `get/set` | Whether orthographic projection is enabled. |
 | `NearClipPlane` | `number` | `get/set` | Near clipping plane in metres. |
 | `OrthographicSize` | `number` | `get/set` | Orthographic camera size. Used when `IsOrthographic = true`. |
-| `OutputTexture` | `Texture \| nil` | `get` | The custom camera's output texture. Returns `nil` for the main camera. |
+| `OutputTexture` | [`Texture`](../texture/) \| `nil` | `get` | The custom camera's output texture. Returns `nil` for the main camera. |
 | `Position` | `Vector3` | `get/set` | Camera position in world space. |
 | `Rotation` | `Quaternion` | `get/set` | Camera rotation in world space. |
 

@@ -43,7 +43,7 @@ export default defineConfig({
 				{
 					label: 'Справочник API',
 					translations: { en: 'API reference' },
-					items: [{ slug: 'api/camera' }],
+					items: [{ slug: 'api/camera' }, { slug: 'api/texture' }],
 				},
 			],
 		}),
