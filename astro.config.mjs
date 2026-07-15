@@ -116,6 +116,35 @@ export default defineConfig({
 								{ slug: 'api/combat-log' },
 							],
 						},
+						{
+							label: 'Отображение и общение',
+							translations: { en: 'Presentation and communication' },
+							collapsed: false,
+							items: [
+								{ slug: 'api/audio' },
+								{ slug: 'api/world-visuals' },
+								{ slug: 'api/notification' },
+								{ slug: 'api/chat' },
+							],
+						},
+						{
+							label: 'Интерфейс',
+							translations: { en: 'Interface' },
+							collapsed: false,
+							items: [
+								{ slug: 'api/imgui' },
+								{
+									label: 'UI',
+									collapsed: false,
+									items: [
+										{ slug: 'api/ui' },
+										{ slug: 'api/ui-elements' },
+										{ slug: 'api/ui-style' },
+										{ slug: 'api/ui-animation' },
+									],
+								},
+							],
+						},
 					],
 				},
 			],

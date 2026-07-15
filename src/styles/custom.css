@@ -57,6 +57,18 @@
 	white-space: nowrap;
 }
 
+/* Nested sidebar groups are subcategories, not full section headings. */
+#starlight__sidebar ul ul details > summary .large {
+	font-size: var(--sl-text-sm);
+	font-weight: 500;
+	color: var(--sl-color-gray-2);
+}
+
+#starlight__sidebar ul ul details > summary:hover .large,
+#starlight__sidebar ul ul details > summary:focus-visible .large {
+	color: var(--sl-color-white);
+}
+
 @media screen {
 	.sl-markdown-content table:has(tbody > tr:nth-child(24)) {
 		max-height: min(68vh, 42rem);
