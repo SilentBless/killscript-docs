@@ -64,6 +64,17 @@ export default defineConfig({
 							items: [{ slug: 'api/time' }, { slug: 'api/scheduler' }],
 						},
 						{
+							label: 'Данные и ввод',
+							translations: { en: 'Data and input' },
+							collapsed: false,
+							items: [
+								{ slug: 'api/input-action' },
+								{ slug: 'api/config' },
+								{ slug: 'api/storage' },
+								{ slug: 'api/localization' },
+							],
+						},
+						{
 							label: 'Окружение',
 							translations: { en: 'Environment' },
 							collapsed: false,
