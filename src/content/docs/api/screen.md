@@ -1,0 +1,51 @@
+---
+title: Screen
+description: Размер игрового экрана в Lua API KILLSCRIPT.
+---
+
+:::note[Проверено в игре]
+Раздел проверен 15 июля 2026 года в KILLSCRIPT Pre-Alpha. API доступен только в клиентской Lua-части.
+:::
+
+`Screen` предоставляет текущую ширину и высоту игрового изображения. В `server.lua` Reflex-модуля глобальный объект `Screen` равен `nil`.
+
+## Свойства
+
+| Свойство | Тип | Доступ | Описание |
+|---|---|---|---|
+| `Width` | `number` | `get` | Ширина экрана в пикселях. |
+| `Height` | `number` | `get` | Высота экрана в пикселях. |
+
+Оба свойства getter-only.
+
+## Отношение сторон
+
+```lua
+local aspect = Screen.Width / Screen.Height
+```
+
+Для разрешения `1920 × 1080` результат равен примерно `1.7778`.
+
+## Центр экрана
+
+```lua
+local center = Vector2.new(Screen.Width / 2, Screen.Height / 2)
+```
+
+## Пример с Rect
+
+Следующий прямоугольник размером `320 × 180` расположен по центру экрана:
+
+```lua
+local width = 320
+local height = 180
+
+local area = Rect.new(
+    (Screen.Width - width) / 2,
+    (Screen.Height - height) / 2,
+    width,
+    height
+)
+```
+
+Подробнее о прямоугольных областях: [`Rect`](../rect/).

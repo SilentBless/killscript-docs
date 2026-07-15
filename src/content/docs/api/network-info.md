@@ -1,0 +1,55 @@
+---
+title: NetworkInfo
+description: Ping, RTT, трафик и потери пакетов в Lua API KILLSCRIPT.
+---
+
+:::note[Проверено в игре]
+Раздел проверен 15 июля 2026 года в KILLSCRIPT Pre-Alpha. API доступен только в клиентской Lua-части.
+:::
+
+`NetworkInfo` предоставляет текущую статистику сетевого соединения. В `server.lua` Reflex-модуля глобальный объект `NetworkInfo` равен `nil`.
+
+## Быстрый пример
+
+```lua
+print("Ping: " .. NetworkInfo.Ping .. " ms")
+print("Packet loss: " .. NetworkInfo.InPacketLossPercent .. "%")
+```
+
+## Свойства
+
+Все свойства доступны только для чтения.
+
+| Свойство | Тип | Доступ | Единица | Описание |
+|---|---|---|---|---|
+| `InKBps` | `number` | `get` | КБ/с | Скорость входящего трафика. |
+| `InPacketLossPercent` | `number` | `get` | `%` | Потери входящих пакетов. |
+| `InterpolationDelayMs` | `number` | `get` | мс | Текущая задержка интерполяции. |
+| `OutKBps` | `number` | `get` | КБ/с | Скорость исходящего трафика. |
+| `OutPacketLossPercent` | `number` | `get` | `%` | Потери исходящих пакетов. |
+| `Ping` | `integer` | `get` | мс | Усреднённый ping по последним измерениям. |
+| `RttSeconds` | `number` | `get` | с | Текущее round-trip time. |
+| `ServerTickTimeMs` | `number` | `get` | мс | Время обработки серверного сетевого тика. |
+| `TickTimeMs` | `number` | `get` | мс | Время обработки клиентского сетевого тика. |
+
+## Ping и RTT
+
+`Ping` и `RttSeconds` не являются одной и той же выборкой в разных единицах. Во время проверки:
+
+- `Ping` был равен `44 ms`;
+- `RttSeconds × 1000` был равен примерно `60.88 ms`.
+
+Используйте `Ping` для готового усреднённого значения, а `RttSeconds` — когда нужен текущий RTT в секундах. Не рассчитывайте точное равенство между ними.
+
+## Динамические значения
+
+Метрики меняются во время соединения. Читайте их в момент обновления интерфейса или диагностики:
+
+```lua
+Scheduler:OnFrame(function()
+    local ping = NetworkInfo.Ping
+    -- Обновление интерфейса
+end)
+```
+
+Не пытайтесь присваивать значения свойствам: все девять setter-ов отклоняются Lua access error.

@@ -64,6 +64,18 @@ export default defineConfig({
 							items: [{ slug: 'api/time' }, { slug: 'api/scheduler' }],
 						},
 						{
+							label: 'Окружение',
+							translations: { en: 'Environment' },
+							collapsed: false,
+							items: [
+								{ slug: 'api/cpu-limit' },
+								{ slug: 'api/map-info' },
+								{ slug: 'api/network-info' },
+								{ slug: 'api/performance' },
+								{ slug: 'api/screen' },
+							],
+						},
+						{
 							label: 'Графика',
 							translations: { en: 'Graphics' },
 							collapsed: false,
