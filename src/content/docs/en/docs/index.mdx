@@ -1,0 +1,33 @@
+---
+title: Documentation
+description: KILLSCRIPT documentation sections for module developers.
+---
+
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+Choose a section based on what you want to build. If you need to look up a signature or property access mode, start with the API reference.
+
+## Available now
+
+<LinkCard
+	title="Camera"
+	description="Main and custom cameras, OutputTexture, world-space projection, and a complete preview example."
+	href="../api/camera/"
+/>
+
+## Sections
+
+<CardGrid>
+	<Card title="Getting started" icon="rocket">
+		Module fundamentals: creation, structure, configuration, execution, and debugging.
+	</Card>
+	<Card title="API reference" icon="open-book">
+		An exact list of available objects, properties, methods, types, and execution contexts.
+	</Card>
+	<Card title="Practical guides" icon="puzzle">
+		Step-by-step guides for building complete modules around concrete gameplay tasks.
+	</Card>
+	<Card title="Reflex" icon="seti:lua">
+		Server-side Reflex module logic and communication with the client side.
+	</Card>
+</CardGrid>

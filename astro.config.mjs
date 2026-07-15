@@ -9,7 +9,7 @@ export default defineConfig({
 	integrations: [
 		starlight({
 			title: 'KILLSCRIPT Docs',
-			description: 'Проверенная документация по Lua API игры KILLSCRIPT.',
+			description: 'Lua API, модули и практические руководства для KILLSCRIPT.',
 			favicon: '/favicon.svg',
 			defaultLocale: 'root',
 			locales: {
@@ -36,9 +36,14 @@ export default defineConfig({
 			customCss: ['./src/styles/custom.css'],
 			sidebar: [
 				{
-					label: 'О документации',
-					translations: { en: 'About the docs' },
-					items: [{ slug: 'about/verification' }],
+					label: 'Документация',
+					translations: { en: 'Documentation' },
+					items: [{ slug: 'docs' }],
+				},
+				{
+					label: 'Справочник API',
+					translations: { en: 'API reference' },
+					items: [{ slug: 'api/camera' }],
 				},
 			],
 		}),

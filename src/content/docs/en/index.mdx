@@ -1,12 +1,12 @@
 ---
 title: KILLSCRIPT Documentation
-description: Verified documentation for the KILLSCRIPT Lua API.
+description: Lua API, modules, and practical guides for KILLSCRIPT.
 template: splash
 hero:
-  tagline: Verified documentation for the KILLSCRIPT Lua API
+  tagline: Build KILLSCRIPT modules — from your first script to Reflex
   actions:
-    - text: How we verify the API
-      link: ./about/verification/
+    - text: Open documentation
+      link: ./docs/
       icon: right-arrow
     - text: GitHub
       link: https://github.com/SilentBless/killscript-docs
@@ -16,21 +16,21 @@ hero:
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-## Documentation you can trust
+## Everything you need to build modules
 
-We do not migrate old pages automatically. Every section is first tested in the game, including properties, methods, execution contexts, and examples.
+The documentation explains the API through practical examples and helps you quickly find the property, method, or implementation pattern you need.
 
-<CardGrid stagger>
-	<Card title="Learn from scratch" icon="open-book">
-		Step-by-step tutorials will explain modules and core concepts without assuming prior experience.
+<CardGrid>
+	<Card title="Getting started" icon="rocket">
+		Create a module, understand its file structure, run code, and use the in-game console.
 	</Card>
-	<Card title="Solve practical tasks" icon="rocket">
-		Task-oriented guides will focus on concrete results and complete working code.
+	<Card title="API reference" icon="open-book">
+		Properties, methods, types, `get`/`set` access, and client/server context restrictions.
 	</Card>
-	<Card title="Look up the API" icon="approve-check">
-		The reference will clearly show types, `get`/`set` access, context, and actual behavior.
+	<Card title="Practical guides" icon="puzzle">
+		Complete module examples with explanations of key decisions and common mistakes.
 	</Card>
-	<Card title="Use working examples" icon="puzzle">
-		Only examples tested against a current game version will be included.
+	<Card title="Reflex modules" icon="seti:lua">
+		Client/server communication, network messages, and server-side logic.
 	</Card>
 </CardGrid>
