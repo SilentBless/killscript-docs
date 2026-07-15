@@ -93,6 +93,18 @@ export default defineConfig({
 							items: [{ slug: 'api/camera' }, { slug: 'api/texture' }],
 						},
 						{
+							label: 'Игровой мир',
+							translations: { en: 'Game world' },
+							collapsed: false,
+							items: [
+								{ slug: 'api/agent' },
+								{ slug: 'api/item' },
+								{ slug: 'api/entity' },
+								{ slug: 'api/game-config' },
+								{ slug: 'api/shop' },
+							],
+						},
+						{
 							label: 'Матч и сеть',
 							translations: { en: 'Match and networking' },
 							collapsed: false,

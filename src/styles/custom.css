@@ -33,3 +33,81 @@
 	-webkit-background-clip: text;
 	color: transparent;
 }
+
+@media (min-width: 72rem) {
+	html[data-has-sidebar][data-has-toc] {
+		--sl-content-width: 58rem;
+	}
+}
+
+.sl-markdown-content table {
+	width: 100%;
+	max-width: 100%;
+	overflow: auto;
+	overscroll-behavior: contain;
+	scrollbar-gutter: stable;
+}
+
+.sl-markdown-content th,
+.sl-markdown-content td {
+	vertical-align: top;
+}
+
+.sl-markdown-content th {
+	white-space: nowrap;
+}
+
+@media screen {
+	.sl-markdown-content table:has(tbody > tr:nth-child(24)) {
+		max-height: min(68vh, 42rem);
+		border-block-end: 1px solid var(--sl-color-gray-5);
+	}
+
+	.sl-markdown-content table:has(tbody > tr:nth-child(24)) th {
+		position: sticky;
+		top: 0;
+		z-index: 1;
+		background: var(--sl-color-bg);
+	}
+}
+
+.api-context {
+	display: inline-flex;
+	align-items: center;
+	margin-inline-end: 0.35rem;
+	padding: 0.12rem 0.48rem;
+	border: 1px solid currentColor;
+	border-radius: 999px;
+	font-size: 0.72rem;
+	font-weight: 650;
+	line-height: 1.35;
+	vertical-align: 0.08em;
+	white-space: nowrap;
+}
+
+.api-context--client {
+	color: #69b9ff;
+	background: color-mix(in srgb, #2989d8 16%, transparent);
+}
+
+.api-context--server {
+	color: #dd8cff;
+	background: color-mix(in srgb, #a34ee4 16%, transparent);
+}
+
+.api-context--local {
+	color: #58d6a8;
+	background: color-mix(in srgb, #24a77a 16%, transparent);
+}
+
+:root[data-theme='light'] .api-context--client {
+	color: #176aa8;
+}
+
+:root[data-theme='light'] .api-context--server {
+	color: #7c299f;
+}
+
+:root[data-theme='light'] .api-context--local {
+	color: #167250;
+}
