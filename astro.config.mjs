@@ -220,6 +220,12 @@ export default defineConfig({
 						},
 					],
 				},
+				{
+					label: 'TypeScript (экспериментально)',
+					translations: { en: 'TypeScript (experimental)' },
+					collapsed: true,
+					items: [{ slug: 'typescript/overview' }],
+				},
 			],
 		}),
 	],
