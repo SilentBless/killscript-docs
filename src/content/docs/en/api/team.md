@@ -9,6 +9,8 @@ This page was verified on July 15, 2026, in KILLSCRIPT Pre-Alpha. Every property
 
 `Team` represents one side in a match. It cannot be constructed directly. Other APIs return it, including [`DefusalGame.BridgerFrontTeam`](../defusal-game/) and `DefusalGame.KillScriptCompanyTeam`.
 
+The server match mode calculates score, economy loss streak, and used timeouts. `Team` only lets Lua read current server state or its replicated client copy; assignment is not a command to change score.
+
 ```lua
 local attackers = DefusalGame.BridgerFrontTeam
 

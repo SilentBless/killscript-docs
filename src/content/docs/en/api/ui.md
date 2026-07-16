@@ -19,6 +19,23 @@ The UI reference is split into several pages:
 - [styles](../ui-style/);
 - [animations](../ui-animation/).
 
+## How the interface is processed
+
+The UXML loader creates a retained `VisualElement` tree that persists between frames until the module removes it. `Build*` methods immediately attach a root to a screen/HUD container, while `Create*` methods only create detached elements in memory.
+
+After attachment, UI layout calculates sizes and positions, the renderer draws the tree, and the event system routes pointer/focus events to matching elements. Changing a property or style updates that same tree; the module does not need to redraw the whole interface every frame.
+
+## Where the result appears
+
+| Creation method | Where the element lives |
+|---|---|
+| `BuildFromUxmlAbsolute()` | In the root screen layer. UXML/USS styles control placement; pointer input is disabled by default. |
+| `BuildFromUxmlInteractive()` | In the same screen layer, with pointer interaction enabled. |
+| `BuildFromUxml()` / `BuildFromUxmlAbsoluteCenter()` | In a separate HUD window exposed in the player's interface editor. |
+| `CreateFromUxml()` / `CreateVisualElement()` / `CreateLabel()` | Nowhere until the element is added to an already displayed tree with `Add()`. |
+
+`OpenWindow()` does not create a second copy of the interface. It opens the supplied element as an exclusive window and applies the selected cursor, player-input, blur, and overlapping-UI rules.
+
 ## Quick start
 
 Place UXML and USS files in the module's `ui/` directory. Paths passed from Lua are relative to that directory.
@@ -157,7 +174,11 @@ root:GetChild(name: string): VisualElement
 root:GetChildAt(index: number): VisualElement
 ```
 
-`Q()` and `GetChild()` recursively find a descendant by `name`. `GetChildAt()` accesses a direct child using a zero-based index. A missing element returns `nil`.
+`Q()` and `GetChild()` recursively find a descendant by `name` and return `nil` when no match exists. `GetChildAt()` accesses a direct child using a zero-based index.
+
+:::caution[Known issue in the current build]
+`GetChildAt()` raises a Lua error for an out-of-range index instead of returning `nil`. Check `index >= 0` and `index < element.childCount` before calling it. The issue has been reported to the developer and will be fixed in a future build.
+:::
 
 ```lua
 UI:RemoveFromHierarchy(root: VisualElement)
@@ -251,10 +272,14 @@ UI:UiToViewportPoint(point: Vector2): Vector2
 UI:ToUpperInvariant(text: string): string
 ```
 
-- `GetMousePosition()` returns the cursor position in UI coordinates;
+- `GetMousePosition()` returns the current cursor position;
 - `ViewportToUiPoint()` converts a viewport position to UI coordinates;
 - `UiToViewportPoint()` performs the inverse conversion;
 - `ToUpperInvariant()` converts text to uppercase without depending on the system language. It returns `nil` for `nil`.
+
+:::caution[Known issue in the current build]
+`GetMousePosition()` currently returns raw screen coordinates rather than UI Toolkit panel coordinates. Do not use the result directly for layout or pass it to `UiToViewportPoint()` without your own conversion. The issue has been reported to the developer and will be fixed in a future build.
+:::
 
 ## PlayerRankDisplay
 

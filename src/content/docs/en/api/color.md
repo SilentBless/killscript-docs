@@ -9,6 +9,12 @@ This page was verified on July 15, 2026, in KILLSCRIPT Pre-Alpha. The type is av
 
 `Color` stores the red, green, blue, and alpha components of a color. It is used by [UI](../ui/), [ImGui](../imgui/), [WorldVisuals](../world-visuals/), and other APIs that accept a color.
 
+## Purpose and processing
+
+`Color` is a data value, not a draw command. Construction and changes to `r/g/b/a` are handled by the Lua wrapper and display nothing by themselves. A color affects the game only after it is passed to a consumer such as a UI style, `ImGui`, or `LineRenderer:SetColor()`.
+
+Changing a local `Color` after a call does not automatically update an object that was already configured. Pass the new value to the consumer again.
+
 ## Quick example
 
 ```lua

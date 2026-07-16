@@ -9,6 +9,12 @@ This page was verified on July 15, 2026, in KILLSCRIPT Pre-Alpha. The type is av
 
 `Rect` describes a rectangle using position `(x, y)` and size `(width, height)`. It is commonly used to place `ImGui` elements and other two-dimensional regions.
 
+## Purpose and processing
+
+`Rect` only stores rectangular geometry. It does not place or clip anything by itself. The method receiving the value decides how to interpret its coordinates—for example, `ImGui` uses it as a screen-space drawing region.
+
+Derived fields such as `xMin/xMax/yMin/yMax/center` recalculate the same bounds. Changing a local rectangle does not move something drawn earlier; pass it to the drawing API again.
+
 ## Quick example
 
 ```lua

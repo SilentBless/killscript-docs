@@ -11,6 +11,12 @@ This page was verified on July 15, 2026, in KILLSCRIPT Pre-Alpha. Properties, ex
 
 Every property on `DefusalGame` itself is read-only.
 
+## Where state comes from
+
+The server Defusal mode controls round stages, timers, sides, score, and the BridgeCharge lifecycle. In `server.lua`, properties read this authoritative state; the client receives its replicated representation for HUD and modules.
+
+`DefusalGame` starts and ends nothing; it is an observation interface. `GetMatchRoundsLog()` returns records of already calculated history. Even though `DefusalRoundState` fields accept Lua assignment, only the local record object changes—not the match.
+
 ## Current round state
 
 ```lua
@@ -77,6 +83,10 @@ DefusalGame:GetMatchRoundsLog(): Array<DefusalRoundState>
 ```
 
 Returns round-state history as an [`Array`](../array/). Like other API arrays, indexing starts at `1`.
+
+:::caution[Known issue in the current build]
+The method currently returns all `52` network slots, including future empty rounds with fabricated `RoundId` values. Do not use `Length` as the number of played rounds; filter records against current match state. The issue has been reported to the developer and will be fixed in a future build.
+:::
 
 ```lua
 local rounds = DefusalGame:GetMatchRoundsLog()

@@ -9,6 +9,10 @@ This page was verified on July 15, 2026, in KILLSCRIPT Pre-Alpha. The API is onl
 
 `Performance` provides averaged FPS, frame-time, and CPU/GPU utilization metrics. In a Reflex module's `server.lua`, the global `Performance` object is `nil`.
 
+## Where values come from
+
+The client performance collector aggregates frame duration and CPU/GPU occupancy, while the API exposes calculated values for the latest measurement window. This diagnoses the local client: reading these properties does not affect FPS or control graphics quality.
+
 ## Quick example
 
 ```lua

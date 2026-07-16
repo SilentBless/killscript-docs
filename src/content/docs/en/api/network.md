@@ -9,6 +9,14 @@ This page was verified on July 15, 2026, in KILLSCRIPT Pre-Alpha. Bidirectional 
 
 `Network` connects the `main.lua` and `server.lua` sides of the same [Reflex module](../../reflex/architecture/). One side sends a Lua table with `SendTable()` and the other receives it through `OnTableReceived()`.
 
+Transport is not shown to the player automatically. The server normally makes a decision and sends compact state to the client; the client then updates [UI](../ui/), [ImGui](../imgui/), audio, or a notification. `SendTable()` also does not wait for a response or confirm delivery through its return value.
+
+## How a message is processed
+
+`SendTable()` serializes supported values from the table and transports the packet to the other half of the same Reflex module. On receipt, that runtime constructs a new Lua table and invokes the callback registered through `OnTableReceived()`.
+
+The sender does not call a server function directly and does not receive its result. If the protocol needs a response, the receiving side must send a separate message with its own `kind` and request identifier.
+
 ## Quick example
 
 The client requests the current round state:
@@ -107,6 +115,12 @@ Sends a table to the other side of the Reflex module.
 | `data` | `table` | Message data. |
 
 The method returns `nil`. Sending a table is not a request by itself. If a response is required, define message fields and handle the response through `OnTableReceived()`.
+
+:::caution[Known issue in the current build]
+In regular network mode, only the first `SendTable()` call in a tick reaches the receiver, and a payload larger than `16384` UTF-8 bytes is silently dropped. Host mode behaves differently, so a successful local test does not guarantee the same behavior for a remote client. Combine updates into one table per tick and keep the message below the limit.
+
+The issue has been reported to the developer and will be fixed in a future build.
+:::
 
 ## Common mistakes
 

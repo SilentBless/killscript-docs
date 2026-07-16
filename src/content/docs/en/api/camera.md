@@ -11,6 +11,12 @@ The `Camera` API lets you inspect the scene's main camera and create additional 
 
 This entire API is client-only. In a Reflex module's `server.lua`, the global `Cameras` object is `nil`.
 
+## How the game processes a camera
+
+`Cameras.Main` wraps the game client's real active camera. Setters immediately change its component, but character and other camera controllers may write their own state on the next frame.
+
+`CreateCamera()` registers a separate client camera and creates a render texture for it. While active, the renderer updates `OutputTexture`; `SetActive(false)` stops new frames, while `RemoveCamera()` removes the created resource. None of these calls adds the texture to the HUD by itself.
+
 ## Key points
 
 - `Cameras.Main` returns the main camera and is read-only.
@@ -18,6 +24,17 @@ This entire API is client-only. In a Reflex module's `server.lua`, the global `C
 - `IsMainCamera` and `OutputTexture` are read-only properties.
 - `SetActive(false)` stops updating `OutputTexture` and preserves its last frame.
 - A custom camera does not replace the main view automatically. You must display its `OutputTexture` yourself.
+
+## Where the result appears
+
+| Action | What changes |
+|---|---|
+| Modifying `Cameras.Main` | Immediately changes the main game view. The game may overwrite the values on the next frame. |
+| Creating a custom camera | Does not add anything to the screen by itself. Its image is available only through `OutputTexture`. |
+| `SetActive(false)` | Freezes texture updates but does not hide an image that is already being displayed. |
+| `WorldToViewportPoint()` | Only calculates a point's screen position and does not draw anything. |
+
+To show a custom camera, pass its `OutputTexture` to [ImGui](../imgui/) or a [UI](../ui-elements/) element. Texture resolution and on-screen size are independent.
 
 ## Complete example
 

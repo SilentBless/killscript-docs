@@ -9,6 +9,25 @@ This page describes the API behavior in the current game version.
 
 <span class="api-context api-context--client">Client only</span> `ChatManager` is unavailable in a Reflex module's `server.lua`.
 
+## How a message is processed
+
+`AddLocalMessage()` adds an entry only to the local chat model. `SendActiveMessage()` and `SendMessage()` pass text to the channel network system; after processing, recipients receive a regular `ChatMessage`, and chat UI reads the updated model.
+
+`ChatChannel` describes a channel and its permissions, while `ChatMessage` is an entry that already exists. Changing the active channel changes the local client's selection but does not move existing messages between channels.
+
+## Where the result appears
+
+The standard chat renders messages in the `Default Chat` HUD window in the bottom-left corner. Players can move this window in the HUD editor. In collapsed mode, messages remain visible for a limited time; the standard value is 10 seconds.
+
+| Action | What the player sees |
+|---|---|
+| `AddLocalMessage()` | A local system message attributed to the module. It is not sent to other players; the collapsed standard feed may show it only on its next refresh. |
+| `SendActiveMessage()` / `SendMessage()` | A network message appears in the selected channel feed for all recipients. |
+| `SetActiveChannel*()` | Changes the channel selected for viewing and sending; it does not show a separate notification. |
+| `ShowMessageContextMenu()` | Opens the built-in menu next to the matching message. |
+
+The built-in `Default Chat` module provides the standard presentation. If it is disabled or replaced, `ChatManager` data and events remain available but the standard feed may not appear. `AddLocalMessage()` does not invoke `OnMessagesChanged()`: the collapsed standard feed picks it up on its next normal refresh or when chat opens, while custom interfaces should refresh immediately after the call.
+
 ## Quick example
 
 ```lua

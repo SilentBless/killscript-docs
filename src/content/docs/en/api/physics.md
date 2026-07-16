@@ -9,6 +9,14 @@ This page was verified on July 15, 2026, in KILLSCRIPT Pre-Alpha. Both `Raycast(
 
 `Physics` performs ray queries against the scene. It is available only in client Lua; the global `Physics` value is `nil` in a Reflex `server.lua`.
 
+`Physics.Raycast()` does not draw or change anything in the world. It only returns an intersection result. To display a ray or marker, use the returned coordinates with [WorldVisuals](../world-visuals/); for a screen-space label, combine [ImGui](../imgui/) with [`Camera:WorldToViewportPoint()`](../camera/#worldtoviewportpoint).
+
+## Where the query runs
+
+The client physics scene tests the ray against colliders available to it and immediately returns a `RaycastHit`. This is a local spatial query, not server shot validation: the result deals no damage and does not confirm that the server will allow an action.
+
+`RaycastHit` is a result structure. Assigning its fields only changes the local value and does not move the collision point or a collider in the scene.
+
 ## Example
 
 Check the surface below the main camera:

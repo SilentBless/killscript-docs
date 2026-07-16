@@ -86,6 +86,16 @@ Choose a section based on what you want to build. If you need to look up a signa
 
 ## API reference
 
+Reference pages describe both signatures and processing paths. Distinguish between:
+
+- a **value** (`Vector3`, `Color`), which only carries data until another API consumes it;
+- a **query/result** (`Raycast`, `GetAll`, event structures), which observes or describes an already calculated result;
+- a **live object** (`Agent`, `Item`, `Entity`), which refers to an existing game object and may become unavailable;
+- a **config object** (`ConfigItem*`), which describes rules for an object type but is not a live item;
+- a **command**, which submits a change to a particular subsystem; a `nil` return does not always mean the server accepted the outcome.
+
+At the beginning of each page, check which system owns the data, where the call runs, and which consumer presents its result.
+
 ### Core types
 
 <LinkCard

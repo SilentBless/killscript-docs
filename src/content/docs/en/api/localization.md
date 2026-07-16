@@ -9,6 +9,12 @@ This page was verified on July 15, 2026, in KILLSCRIPT Pre-Alpha with English an
 
 `Localization` returns a translation for the game's current language. The API is client-only; its global value is `nil` in a Reflex `server.lua`.
 
+`GetTranslation()` only returns a string and does not display it automatically. Pass the result to [UI](../ui/), [ImGui](../imgui/), [NotificationController](../notification/), or another presentation API.
+
+## Where the string comes from
+
+The localization system first looks for the key among module strings and game terms for the selected language. If a module translation is empty, it uses the English column; if the key is missing everywhere, the API returns the key itself. The result is a regular string that is then handled by the calling UI or another API.
+
 ## localization.csv
 
 The file belongs in the module root and uses semicolons as separators:

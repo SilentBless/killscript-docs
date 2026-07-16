@@ -9,6 +9,12 @@ This page was verified on July 15, 2026, in KILLSCRIPT Pre-Alpha. The type is av
 
 `Vector2` stores two coordinates: `x` and `y`. It is suitable for points, sizes, directions, and screen coordinates.
 
+## Purpose and processing
+
+`Vector2` is a generic two-number value. It gains meaning only in the receiving API: `AgentInput` interprets it as movement or look angles, UI uses it as a two-dimensional position, and math methods treat it as a regular vector.
+
+`Dot`, `Angle`, `Distance`, `Normalize`, and arithmetic only perform calculations and do not change game state. Pass the result to the appropriate setter or method for it to take effect.
+
 ## Quick example
 
 ```lua

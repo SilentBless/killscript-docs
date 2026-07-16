@@ -7,7 +7,13 @@ description: World entities, thrown projectiles, and active explosions.
 This page only documents properties and methods available in the current build with confirmed access behavior.
 :::
 
-Game world entity API.
+`Entity` is the common base for world objects. This page covers thrown grenades and active explosion objects. Every property is read-only.
+
+## How data flows
+
+The game world creates and removes network entities: projectiles on throw, explosion areas on detonation, and a planted BridgeCharge after plant completes. The `ThrownProjectiles`, `Explosions`, and `PlantedBridgeCharges` globals query the current registry and wrap matching objects for Lua.
+
+A wrapper does not create an entity or extend its lifetime. A retained object may become unavailable after explosion or despawn; call `GetAll()` or the specialized query again for a current list. Client values also follow team-visibility rules, while the server reads simulation state directly.
 
 ## EMPGrenadeExplosion
 
@@ -32,6 +38,8 @@ Base object for all entities in the world.
 ## Explosion
 
 Base explosion object with common lifetime parameters.
+
+Here, an “explosion” is an active gameplay-effect entity: an instantaneous frag, fire area, sonar, or protective dome. The game system processes damage and other effects; reading the object only observes state that already exists.
 
 **Base:** [Entity](../entity/#entity)
 
@@ -135,6 +143,8 @@ Fire from an incendiary grenade.
 
 A planted BridgeCharge in the game world.
 
+The object appears after planting a `BridgeChargeItem` completes and is removed when the corresponding round state ends. It exposes no Lua plant or defuse command.
+
 **Base:** [Entity](../entity/#entity)
 
 In addition to the `Entity` properties, this object exposes the charge icon.
@@ -184,6 +194,8 @@ Sonar as an object in the world.
 
 Thrown item in flight, such as a grenade.
 
+Projectile physics updates position and velocity. Lua only reads the network entity; `SimulateTrajectory()` calculates a separate point set and does not interfere with the real flight.
+
 **Base:** [Entity](../entity/#entity)
 
 ### Properties
@@ -207,6 +219,8 @@ ThrownProjectile:SimulateTrajectory(): Array<Vector3>
 
 <span class="api-context api-context--client">Client only</span> Returns the calculated flight trajectory.
 
+This method does not move or draw anything. It returns a snapshot of calculated points; pass them to [`LineRenderer:SetPositions()`](../world-visuals/#setpositions) to display a world-space line.
+
 **Returns:** Array<Vector3>
 
 ## ThrownProjectiles
@@ -226,5 +240,3 @@ Returns all active thrown items, such as grenades, that have not exploded yet. O
 **Returns:** Array<[ThrownProjectile](../entity/#thrownprojectile)>
 
 Related types: [Array](../array/) and [Vector3](../vector3/).
-
-

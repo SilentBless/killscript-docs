@@ -9,6 +9,12 @@ This page was verified on July 15, 2026, in KILLSCRIPT Pre-Alpha using real inco
 
 `CombatLog` contains the local player's client-side hit history. It is available only in `main.lua`; the global `CombatLog` value is `nil` in a Reflex `server.lua`.
 
+## How the log is populated
+
+The server combat system first confirms a hit and its damage. When the client receives the processed result, the local combat log adds an outgoing or incoming entry. `CombatLog.Entries` only reads accumulated history and does not participate in hit calculation.
+
+Use [`Agents:OnLocalPlayerDealtDamage()`](../agent/#onlocalplayerdealtdamage) or `OnLocalPlayerReceivedDamage()` to react at event time. The log is useful for later presentation and statistics; changing an entry does not alter health or server history.
+
 ## Example
 
 ```lua

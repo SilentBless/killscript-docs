@@ -9,6 +9,12 @@ This page was verified on July 15, 2026, in KILLSCRIPT Pre-Alpha. The API is onl
 
 `Screen` provides the current width and height of the game image. In a Reflex module's `server.lua`, the global `Screen` object is `nil`.
 
+## What the values describe
+
+This is the client render area's size in pixels at read time. Properties update when resolution or window size changes and change nothing by themselves.
+
+The values are useful for `ImGui` and screen-space calculations. UXML/UI may additionally apply HUD scale and its own layout, so the pixel center of `Screen` is not always the coordinate center inside a specific UI container.
+
 ## Properties
 
 | Property | Type | Access | Description |

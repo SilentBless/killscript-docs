@@ -9,6 +9,12 @@ This page was verified on July 15, 2026, in KILLSCRIPT Pre-Alpha on Castle. The 
 
 `MapInfo` provides parameters of the current map and finds the gameplay zones at a world position.
 
+## Where the data comes from
+
+Properties are read from the loaded map definition. `GetZones(position)` checks the provided world point against game-zone volumes and returns the names of every matching zone. It does not move an object into a zone or subscribe to enter/exit events.
+
+To track an agent, repeat the query with its current [`Movement.Position`](../agent/#movement) in an appropriate loop.
+
 ## Quick example
 
 ```lua

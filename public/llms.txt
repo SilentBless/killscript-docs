@@ -22,6 +22,20 @@ When a requested feature stays inside the documented module sandbox, treat it as
 - State what the user must test in game when the result is visual, input-dependent, or server-dependent.
 - For exact API work, fetch the relevant linked reference page before generating code.
 
+### Interpret API values by their data flow
+
+Do not treat every documented object or mutable field as a command. Before using an API member, identify which role it has on its reference page:
+
+- A value type such as `Vector3`, `Color`, `Rect`, or `Quaternion` only carries data. Math and field assignment change the local value; a game object changes only after the value is passed to a documented consumer.
+- A query such as `Agents:GetAll()`, `Physics.Raycast()`, or `MapInfo:GetZones()` observes current state and returns a result. It does not perform the observed gameplay action.
+- A live wrapper such as `Agent`, `Item`, or `Entity` refers to an existing game object and may become unavailable after despawn, death, disconnect, inventory changes, or a round transition. Reacquire it instead of retaining it indefinitely.
+- A config wrapper such as `ConfigItemFirearm` describes rules for a type of object. It is not a live item and cannot grant or mutate one.
+- An event/result structure such as `HitEvent`, `DamageEvent`, `RaycastHit`, `HitscanHit`, or `PingEvent` describes a result already produced by another system. Mutable fields normally change only the Lua structure, not the completed hit, damage, collision, or HUD event.
+- A command method may submit work to another system. A `nil` return often confirms only that the call completed, not that a server validated or applied the requested operation. Follow the method's documented result path.
+- A presentation API may emit data without drawing it itself. The reference page identifies whether a built-in HUD module, retained UI tree, frame draw queue, camera renderer, audio player, or world renderer consumes the result.
+
+When explaining generated code, state the complete path where relevant: Lua call → processing system → changed state or result → presentation/consumer. Do not claim a visible or authoritative effect merely because a setter accepted a value.
+
 Full English documentation: https://silentbless.github.io/killscript-docs/en/docs/
 
 ## Documentation map
@@ -386,7 +400,7 @@ Any decision that can be derived from authoritative game state and changes simul
 - Send the result to the client only when UI, audio, camera work, or another local presentation needs to reflect it.
 - `InputActions` and custom bindings are client-only. The client may send an activation edge, selected mode, or changed setting once; after that, keep continuous observation, timing, and action on the server.
 - Do not stream per-frame client commands when a compact enabled/disabled or configuration message lets the server own the loop.
-- Apply supported agent-control changes through documented Reflex-server APIs such as `AgentInput` or `Aim`, not through a client `OnFrame()` loop.
+- Apply supported agent-control changes through documented Reflex-server APIs such as `AgentInput` or `Aim`, not through a client `OnFrame()` loop. Temporary current-build exception: the `AgentInput:SetButtonState()`, `SetMoveDirection()`, and `SetLookRotation()` setters in `server.lua` change Lua-visible state but do not apply input to the actually controlled agent; its getters still work. The issue has been reported to the developer and will be fixed in a future build. Do not generate server-side input control that relies on these `AgentInput` setters until then. This warning does not apply to the separate `Aim` API.
 - If the required state or mutation has no documented server API, report the limitation instead of moving an authoritative decision to the client and presenting it as equivalent.
 
 Think of `main.lua` as input/configuration plus presentation, and `server.lua` as observation, decision, and simulation-side action.
@@ -450,6 +464,17 @@ References:
 
 Guide: https://silentbless.github.io/killscript-docs/en/interface/choosing-ui/
 
+## Result and presentation rules
+
+- Distinguish loading, querying, simulating, and rendering. A returned object or successful call does not imply visible output.
+- `Textures:GetTexture()` and `WeaponPreview.GetWeaponPreview()` return textures; display them through UI or ImGui.
+- Raycasts, hit scans, predicted hits, and trajectory simulations return data only. They do not draw, fire, throw, move, or deal damage.
+- Custom cameras render only into `OutputTexture`; `SetActive(true)` does not put that texture on screen.
+- Input callbacks, Scheduler callbacks, Network messages, Localization lookups, and Storage values have no built-in presentation. The client must explicitly render or play the result.
+- Built-in chat, subtitle, notification, and ping visuals are presentation modules. Their underlying APIs can remain available when the standard renderer is disabled or replaced.
+- Shop command methods and pickup requests return `nil`; inspect inventory, query state, or world collections to confirm the effect.
+- Follow each linked API page's “Where the result appears” section before choosing feedback, cleanup, timing, or ownership behavior.
+
 ## Compact API directory
 
 The entries below describe purpose and routing, not every member. Fetch the linked page before using an exact signature.
@@ -486,8 +511,8 @@ The entries below describe purpose and routing, not every member. Fetch the link
 ### Graphics and resources
 
 - [Camera](https://silentbless.github.io/killscript-docs/en/api/camera/): read the main camera, create independent cameras, render to `OutputTexture`, project world positions, activate, resize, and remove custom cameras.
-- [Texture](https://silentbless.github.io/killscript-docs/en/api/texture/): load module images by path. Use the exact filename and extension; cache the result rather than loading every frame.
-- [Audio](https://silentbless.github.io/killscript-docs/en/api/audio/): load module sounds, play 2D or positioned audio, and access documented voice APIs.
+- [Texture](https://silentbless.github.io/killscript-docs/en/api/texture/): load module images by path. Loading does not display an image; use the exact filename and extension, cache the result, and render it through UI or ImGui.
+- [Audio](https://silentbless.github.io/killscript-docs/en/api/audio/): load module sounds, play local 2D or positioned audio, and access documented voice APIs. `VoiceLinePlayer.Subtitle` is data; the built-in `HudSubtitles` module provides the standard lower-screen presentation.
 
 Camera warnings:
 
@@ -502,7 +527,7 @@ Camera warnings:
 ### Agents and game objects
 
 - [Agent](https://silentbless.github.io/killscript-docs/en/api/agent/): agent queries, identity, team, position, aim, health, movement, inventory, hitboxes, stats, interaction, visibility, input, and combat/death events. Member context varies.
-- [Item](https://silentbless.github.io/killscript-docs/en/api/item/): items, firearm/melee/throwable wrappers, inventory items, firearm and melee hit simulation, drops, trajectories, predicted hits, and bridge charges. Member context varies.
+- [Item](https://silentbless.github.io/killscript-docs/en/api/item/): items, firearm/melee/throwable wrappers, inventory items, hit simulation, drops, trajectories, predicted hits, and bridge charges. Simulations return data only; they do not perform or display the action. Member context varies.
 - [Entity](https://silentbless.github.io/killscript-docs/en/api/entity/): world entity state, thrown projectiles, explosions, planted bridge charges, and related collections.
 - [GameConfig](https://silentbless.github.io/killscript-docs/en/api/game-config/): item definitions, game constants, flags, shop configurations, names, IDs, and icons. Large property groups are getter-only.
 - [Shop](https://silentbless.github.io/killscript-docs/en/api/shop/): client-only buy, sell, buy-and-drop, and purchase-state queries. Command methods return `nil`; inspect inventory and query methods for the result.
@@ -514,14 +539,14 @@ Always nil-check objects returned by queries. Objects saved across rounds, death
 - [Network](https://silentbless.github.io/killscript-docs/en/api/network/): Reflex client/server table transport.
 - [DefusalGame](https://silentbless.github.io/killscript-docs/en/api/defusal-game/): round, stage, bridge-charge, team, timer, overtime, winner, and match-round-log state.
 - [Team](https://silentbless.github.io/killscript-docs/en/api/team/): team economy loss count, round wins, and timeouts; getter-only.
-- [Physics](https://silentbless.github.io/killscript-docs/en/api/physics/): client-only raycast returning a `RaycastHit`; check `HasHit` before using distance or point.
+- [Physics](https://silentbless.github.io/killscript-docs/en/api/physics/): client-only raycast returning a `RaycastHit`; it draws nothing, and callers must check `HasHit` before using distance or point.
 - [CombatLog](https://silentbless.github.io/killscript-docs/en/api/combat-log/): client-only read-only combat entries for damage, body part, participants, distance, item, and outcome.
 
 ### Presentation and communication
 
-- [WorldVisuals](https://silentbless.github.io/killscript-docs/en/api/world-visuals/): client-only line renderers and surface overlays; retain references and remove temporary objects explicitly.
-- [Notification](https://silentbless.github.io/killscript-docs/en/api/notification/): client-only hints, notifications, violations, ping markers, and related events. Event payload fields may be mutable even when other API objects are read-only; follow the page exactly.
-- [Chat](https://silentbless.github.io/killscript-docs/en/api/chat/): client-only channels, messages, local messages, active-channel control, sends, events, and message context menus.
+- [WorldVisuals](https://silentbless.github.io/killscript-docs/en/api/world-visuals/): client-only 3D world lines and projected surface overlays; objects do not follow cameras/entities automatically, so retain references, update moving objects, and remove temporary objects explicitly.
+- [Notification](https://silentbless.github.io/killscript-docs/en/api/notification/): client-only hints, notifications, violations, ping markers, and related events. `ShowHint` targets the lower-center hint area; `ShowNotification` targets the upper-center banner area; `SetPing` targets a world position projected onto the HUD. Standard visuals require the corresponding built-in presentation module. Event payload fields may be mutable even when other API objects are read-only; follow the page exactly.
+- [Chat](https://silentbless.github.io/killscript-docs/en/api/chat/): client-only channels, messages, local messages, active-channel control, sends, events, and message context menus. The built-in `Default Chat` module provides the standard bottom-left feed.
 
 ### ImGui
 
@@ -546,7 +571,7 @@ Guide: https://silentbless.github.io/killscript-docs/en/interface/imgui-hud/
 - [UI styles](https://silentbless.github.io/killscript-docs/en/api/ui-style/): layout, dimensions, spacing, colors, backgrounds, borders, opacity, transforms, and overflow.
 - [UI animations](https://silentbless.github.io/killscript-docs/en/api/ui-animation/): timed style/property updates and easing.
 
-Build UXML once and update existing elements. Do not rebuild an entire persistent interface every frame.
+Build UXML once and update existing elements. Do not rebuild an entire persistent interface every frame. `CreateFromUxml()`, `CreateVisualElement()`, and `CreateLabel()` remain invisible until attached to a displayed tree.
 
 Guides:
 
@@ -562,6 +587,19 @@ Guides:
 - [Complete Reflex module](https://silentbless.github.io/killscript-docs/en/reflex/complete-module/): client settings, server tick, health state, and Network synchronization.
 
 ## Common failure prevention
+
+Known current-build API issues have been reported to the developer and are expected to be fixed in future builds:
+
+- Reflex-server `AgentInput:SetButtonState()`, `SetMoveDirection()`, and `SetLookRotation()` do not apply input to the controlled agent. See the Agent page.
+- Typed `ItemConfigs.GetConfigItem*ByName()` can return an invalid non-`nil` wrapper for a mismatched subtype. Only use a name obtained from a matching live item. See GameConfig.
+- `InputAction:Disable()` can be undone by action-map lifecycle operations. Use a Lua guard flag.
+- `Time:SecondsToTick()` can undercount tick-aligned durations by one. Use the documented round-up helper for minimum durations.
+- Combined `Quaternion.euler()` values do not round-trip through `eulerAngles`. Preserve the quaternion itself.
+- In remote mode, only the first `Network:SendTable()` call per tick is delivered, and payloads larger than `16384` UTF-8 bytes are silently dropped. Batch one small message per tick.
+- Enum config validation accepts numeric indices outside the declared options. Clamp the index yourself.
+- `UI:GetMousePosition()` returns raw screen coordinates rather than panel coordinates.
+- `VisualElement:GetChildAt()` raises an error for an out-of-range index. Check `childCount` first.
+- `DefusalGame:GetMatchRoundsLog()` currently includes all 52 network slots, including future placeholders. Do not treat `Length` as the played-round count.
 
 - No console output: enter a game session, select the module log section, and enable informational messages using the filter icon next to Search.
 - Nothing runs in the main menu: module Lua starts after a game session loads.

@@ -9,6 +9,15 @@ This page was verified on July 15, 2026, in KILLSCRIPT Pre-Alpha. Method context
 
 `Scheduler` runs a callback every frame, every server tick, or once after a delay.
 
+The scheduler does not draw or change anything by itself; the code inside the callback determines every visible or gameplay effect. Use `OnFrame()` for client rendering and smooth UI updates, `OnTick()` for server decisions, and `Schedule()` for a one-shot delay in the current context.
+
+## Where callbacks are processed
+
+- `OnFrame()` stores a subscription in the client module runtime and invokes it from the render loop. Its rate follows FPS, not server tickrate.
+- `OnTick()` stores a subscription in the Reflex server runtime and invokes it once per module server tick.
+- `Schedule()` places a one-shot callback in the current runtime's queue; after the delay, the queue invokes it in the same client/server context.
+- `EventSubscription:Cancel()` removes a repeating callback from that queue. It does not undo changes that already ran.
+
 ## Contexts
 
 | Method | Regular module / Reflex `main.lua` | Reflex `server.lua` |

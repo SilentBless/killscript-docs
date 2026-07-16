@@ -9,6 +9,12 @@ This page was verified on July 15, 2026, in KILLSCRIPT Pre-Alpha. The API is onl
 
 `NetworkInfo` provides current network connection statistics. In a Reflex module's `server.lua`, the global `NetworkInfo` object is `nil`.
 
+## Where values come from
+
+The client networking system collects transport, interpolation, and tick timing statistics, while these properties return the current measured snapshot. The API sends nothing and cannot change connection settings.
+
+Metrics cover the client's whole game connection, not only tables sent through [`Network`](../network/). Values change over time, so read them repeatedly when building a graph.
+
 ## Quick example
 
 ```lua

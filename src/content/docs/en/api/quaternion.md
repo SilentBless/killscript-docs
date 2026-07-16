@@ -9,6 +9,12 @@ This page was verified on July 15, 2026, in KILLSCRIPT Pre-Alpha. The type is av
 
 `Quaternion` represents a rotation in 3D. A quaternion is usually constructed from angles or directions and then assigned to a rotation property or multiplied by a `Vector3`.
 
+## Purpose and processing
+
+`Quaternion` stores a rotation but rotates nothing by itself. `euler`, `lookRotation`, interpolation, and multiplication perform mathematical calculations. A camera or another object changes only after the result is passed to its property or method.
+
+Changing `x/y/z/w` changes only the local value and may leave it unnormalized. For regular game code, create rotations with the factory methods and explicitly apply the finished result.
+
 ## Quick example
 
 A `90°` rotation around the Y axis turns `Vector3.forward` to the right:
@@ -88,6 +94,10 @@ The positional table `{ 1, 0, 0 }` is not supported.
 | `eulerAngles` | [`Vector3`](../vector3/) | `get` | Euler-angle representation of the rotation. |
 
 ### eulerAngles limitation
+
+:::caution[Known issue in the current build]
+`Quaternion.euler()` and the `eulerAngles` getter use incompatible conventions for combined rotations. The issue has been reported to the developer and will be fixed in a future build.
+:::
 
 For a rotation around a single axis, `eulerAngles` returns the expected angles. For a combined rotation, its result cannot safely be passed back to `Quaternion.euler()`.
 

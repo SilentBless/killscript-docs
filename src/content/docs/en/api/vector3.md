@@ -9,6 +9,12 @@ This page was verified on July 15, 2026, in KILLSCRIPT Pre-Alpha. The type is av
 
 `Vector3` stores `x`, `y`, and `z` coordinates. Most world-space positions and directions in KILLSCRIPT use this type.
 
+## Purpose and processing
+
+`Vector3` is not a world object by itself. It is a value used to pass a position, direction, velocity, or size. `(1, 0, 0)` may be a direction for `Physics.Raycast()`, a line point, or another parameter—the receiving method defines its meaning.
+
+Vector operations only calculate a new value. Changing local components does not move an agent, camera, or world object until the vector is passed to that object's API.
+
 ## Quick example
 
 ```lua

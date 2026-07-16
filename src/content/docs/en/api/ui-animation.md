@@ -9,6 +9,8 @@ This page describes the API behavior in the current game version.
 
 <span class="api-context api-context--client">Client only</span> Animations operate on elements created through [UI](../ui/).
 
+An animation is visible only when `onUpdate` changes properties on an element that already belongs to a displayed UI tree. `ScheduleAnimation()` does not choose what to animate or show a detached element. After `Stop()`, the element remains at its last applied state; `Complete()` advances it to the final progress value.
+
 ## ScheduleAnimation
 
 Both forms start the same animation:

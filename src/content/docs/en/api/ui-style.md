@@ -9,6 +9,8 @@ This page describes the API behavior in the current game version.
 
 <span class="api-context api-context--client">Client only</span> Access the style through `element.style`.
 
+Style changes apply immediately, but they are visible only when the element belongs to a displayed UI tree. For example, `UI:CreateVisualElement()` creates an in-memory object; after styling it, you still need to attach it with `parent:Add(element)` or obtain a root through one of the displaying [UI](../ui/#where-the-result-appears) methods.
+
 ## Quick example
 
 ```lua

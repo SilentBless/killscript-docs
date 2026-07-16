@@ -11,6 +11,12 @@ The `Textures` API loads images from the current module's `images` directory. A 
 
 `Textures` is available only in client-side Lua. In a Reflex module's `server.lua`, this global object is `nil`.
 
+## How the resource is processed
+
+The module loader resolves a path inside its `images` directory, validates the file, and decodes it into a client texture resource. `Texture` is a reference to that resource with readable dimensions; it contains no screen-placement rules.
+
+The consumer decides how to use it: UI retains it in an element, ImGui adds a draw command for the current frame, while Camera itself produces an updating render texture.
+
 ## Key points
 
 - `.png`, `.jpg`, and `.jpeg` are supported;
@@ -19,6 +25,16 @@ The `Textures` API loads images from the current module's `images` directory. A 
 - `width` and `height` are read-only;
 - a missing or skipped file returns `nil`;
 - images larger than `4096 × 4096` or files larger than `10 MB` are not loaded.
+
+## Where the result appears
+
+`Textures:GetTexture()` only loads an image into memory and does not put anything on the screen. Display the returned object in one of these ways:
+
+- with `ImGui:DrawTexture()` for quick screen-space rendering;
+- through an image property on a [UI](../ui-elements/) element;
+- as a [LineRenderer](../world-visuals/#linerenderer) pattern.
+
+`width` and `height` describe the resource itself. Its on-screen size is configured separately through a `Rect` or UI styles.
 
 ## File placement
 

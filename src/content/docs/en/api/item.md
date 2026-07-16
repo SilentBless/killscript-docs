@@ -9,6 +9,25 @@ This page only documents properties and methods available in the current build w
 
 `Item` represents an item whether it is in an inventory or lying in the world. Every object property on this page is read-only.
 
+## How data flows
+
+The item system owns firearm, grenade, and device instances. `Inventory`, `Items`, and `Drops` expose different views of those game objects: an owner's items, the complete set of existing items, or a dropped world object.
+
+`Item` is a live instance with an owner, ammunition, and state. [`ConfigItem`](../game-config/#configitem) is the immutable definition of an item type. Do not confuse them: reading or editing a local result structure does not change configuration or create an item.
+
+Hitscan and trajectory methods invoke calculation systems and return predictions. Only regular weapon/input commands or a server-approved `Drop:PickUp()` operation change the match.
+
+## Which methods change the game
+
+| Method | Effect |
+|---|---|
+| `Drop:PickUp()` | Requests a real pickup: on success, the item disappears from the world and enters the inventory. |
+| `GetPredictedHits()` | Only returns possible shot outcomes. It does not fire or deal damage. |
+| `HitscanFirearm()` / `HitscanMelee()` | Only calculates hits for the supplied position and direction. It does not play a shot, perform a strike, or create effects. |
+| `SimulateThrowTrajectory()` | Only returns trajectory points. It does not throw the item or draw anything. |
+
+To display a simulation result, draw the returned points yourself through [WorldVisuals](../world-visuals/) or [ImGui](../imgui/).
+
 ## Quick example
 
 ```lua
@@ -168,6 +187,8 @@ Simulates a shot from the specified position in the specified direction and retu
 
 Projectile hit result (hitscan).
 
+This is one element of a simulation result, not a registered combat event. It describes intersection and penetration for the calculated ray; reading its `Hitbox` does not deal damage to that agent.
+
 ### Properties
 
 | Property | Type | Access | Description |
@@ -292,4 +313,3 @@ ThrowableItem:SimulateThrowTrajectory(throwState: EThrowState): Array<Vector3>
 **Returns:** Array<Vector3>
 
 Related types: [Array](../array/) and [Vector3](../vector3/).
-

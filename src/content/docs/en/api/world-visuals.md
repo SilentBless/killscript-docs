@@ -9,6 +9,19 @@ Creation, mutation, rendering, and removal were visually confirmed for both obje
 
 <span class="api-context api-context--client">Client only</span> `WorldVisuals` is unavailable in a Reflex module's `server.lua`.
 
+## How objects are processed
+
+`CreateLineRenderer()` and `CreateSurfaceOverlay()` create real local render objects in the client scene and return control wrappers. Setters update parameters on the existing renderer; they do not need to be repeated every frame when a value is unchanged.
+
+The server does not know about these objects, and physics or gameplay does not account for them. `RemoveObject()` removes only the visual object and does not affect an entity or surface near which it was drawn.
+
+## Where the result appears
+
+- `LineRenderer` draws a line directly in the 3D world through the specified world-space positions. It is not a HUD element.
+- `SurfaceOverlay` projects a colored area onto world geometry inside the specified volume. It does not create a flat screen overlay.
+- Objects remain in the world until the module calls `WorldVisuals:RemoveObject()` or is unloaded.
+- The API renders objects directly and does not depend on a built-in HUD module. It also does not attach them to a camera or entity automatically—update the position yourself for a moving marker.
+
 ## Quick example
 
 ```lua

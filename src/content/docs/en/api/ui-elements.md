@@ -9,6 +9,8 @@ This page describes the API behavior in the current game version.
 
 <span class="api-context api-context--client">Client only</span> Elements are created and loaded through [UI](../ui/).
 
+Creating or finding an element does not display anything new by itself. An element is visible only while it belongs to a root tree placed on screen through one of the [UI](../ui/#where-the-result-appears) methods and its `visible` property is enabled. `RemoveFromHierarchy()` hides it while keeping the object reusable; `Delete()` removes it permanently.
+
 ## VisualElement
 
 The base type of every UI element. Depending on the actual UXML element, query methods automatically return a more specific type: `TextElement`, `ImageElement`, `TextFieldElement`, `ScrollView`, or `DotViewElement`.
@@ -49,7 +51,11 @@ element:GetChild(name: string): VisualElement
 element:GetChildAt(index: number): VisualElement
 ```
 
-`GetChild()` recursively searches for a named descendant. `GetChildAt()` returns a direct child using a zero-based index. Both methods return `nil` when no element is found.
+`GetChild()` recursively searches for a named descendant and returns `nil` when no match exists. `GetChildAt()` returns a direct child using a zero-based index.
+
+:::caution[Known issue in the current build]
+`GetChildAt()` raises a Lua error for an out-of-range index instead of returning `nil`. Check `index >= 0` and `index < element.childCount` before calling it. The issue has been reported to the developer and will be fixed in a future build.
+:::
 
 ### Classes and name
 

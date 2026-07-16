@@ -9,6 +9,24 @@ This page describes the API behavior in the current game version.
 
 <span class="api-context api-context--client">Client only</span> The audio API is unavailable in a Reflex module's `server.lua`.
 
+## How audio is processed
+
+`GetSound()` loads an audio clip from the current module's resources. `PlaySound2D()` passes it to the local non-spatial player, while `PlaySound()` creates spatial playback at a world position; the server and other players do not receive that call.
+
+`VoiceChat` controls the local voice-room client's state, while `VoiceLinePlayer` only exposes data from a game voice line that is already playing. A separate built-in HUD module renders its subtitle.
+
+## Where the result is heard or shown
+
+| Call or object | Result |
+|---|---|
+| `Sounds:GetSound()` | Only loads the resource. It does not play anything yet. |
+| `Sounds:PlaySound()` | Locally plays spatial audio from the specified world position. Loudness depends on the distance from the camera. |
+| `Sounds:PlaySound2D()` | Locally plays non-spatial audio at equal loudness in both channels. |
+| `VoiceChat:SetMuted()` / `ToggleMuted()` | Only changes whether the local player hears the selected agent. It does not show a separate on-screen confirmation. |
+| `VoiceLinePlayer.Subtitle` | Only returns the current text. The built-in `HudSubtitles` module renders standard subtitles in the lower part of the screen. |
+
+The standard subtitle window is horizontally centered at roughly 75% of the screen height. Players can move it in the HUD editor; if `HudSubtitles` is disabled or replaced, the property still works but the standard text is not shown.
+
 ## Quick example
 
 Place `Alert.wav` in the module's `sounds` directory:

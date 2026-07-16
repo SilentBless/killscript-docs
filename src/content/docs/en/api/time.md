@@ -9,6 +9,12 @@ This page was verified on July 15, 2026, in KILLSCRIPT Pre-Alpha. The API is ava
 
 `Time` provides the current simulation time, the current tick, and conversions between seconds and ticks.
 
+## Purpose and processing
+
+`Time.Seconds` and `Time.Tick` read the current simulation clock of the context running the module. They do not start a timer or invoke a callback. Use [Scheduler](../scheduler/) to run code later.
+
+`SecondsToTick()` and `TickToSeconds()` are arithmetic conversions based on network tick duration. They do not wait for the given time or change match progression.
+
 ## Key points
 
 - `Seconds` and `Tick` are read-only;
@@ -64,6 +70,8 @@ The method accepts zero and negative values.
 
 :::caution[A whole second may lose one tick]
 In the current version, `SecondsToTick(1)` returns `59`, while `SecondsToTick(0.5)` returns `29`. This is caused by numeric precision at a tick boundary. Do not add `1` unconditionally: `SecondsToTick(0.1)` already returns the correct value of `6`.
+
+The issue has been reported to the developer and will be fixed in a future build. Until then, use the round-up helper below when a duration must not be shortened.
 :::
 
 ### Ensuring a minimum duration

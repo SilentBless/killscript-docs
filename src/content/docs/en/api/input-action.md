@@ -9,6 +9,14 @@ This page was verified on July 15, 2026, in KILLSCRIPT Pre-Alpha. Action lookup,
 
 `InputActions` looks up input actions, while `InputAction` exposes their state and performed event. The API is client-only. In a Reflex `server.lua`, the global `InputActions` object is `nil`.
 
+`inputs.json` registers a binding but does not draw a button or hint on the HUD. `OnPerformed()` only runs a callback; the module must implement every visible result—such as opening a panel, showing a message, or changing an indicator—through [UI](../ui/), [ImGui](../imgui/), or another API.
+
+## Where input is processed
+
+When the module loads, the client adds actions from `inputs.json` to the shared module input map. The game input system updates each `InputAction`; `IsPressed()` then reads its current state, while `OnPerformed()` invokes subscribers when the action is performed.
+
+This is local user input. It does not become a server command automatically: a Reflex module must explicitly send the required state through [Network](../network/), and the server must validate it and decide what to do.
+
 ## Quick start
 
 Declare a button in the module root's `inputs.json`:
@@ -118,7 +126,7 @@ Both methods return `nil`.
 :::caution[Disable does not block OnPerformed]
 In the verified build, `Disable()` did not suppress a custom action. Later key presses still called the previously registered `OnPerformed()` callback, and `IsPressed()` returned `true` inside that callback. Immediately after the `Disable()` call itself, `IsPressed()` returned `false`.
 
-Do not rely on `Disable()` to temporarily turn a handler off.
+Do not rely on `Disable()` to temporarily turn a handler off. The issue has been reported to the developer and will be fixed in a future build.
 :::
 
 Use your own guard for predictable behavior:

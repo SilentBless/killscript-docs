@@ -9,6 +9,12 @@ This page was verified on July 15, 2026, in KILLSCRIPT Pre-Alpha. The API is ava
 
 `CpuLimit` reports the total and remaining CPU budget for the current Lua module. Every property is read-only.
 
+## What is actually limited
+
+This is the Lua VM execution budget, not the computer's processor usage percentage. The runtime gives the current Lua call a conditional cycle limit and reduces the remainder as instructions execute. When the budget is exhausted, module-limit handling may yield or terminate execution.
+
+The values help heavy loops regulate their work. Reading `CpuLimit` does not speed anything up or reserve additional time.
+
 ## Quick example
 
 ```lua

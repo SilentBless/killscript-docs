@@ -9,6 +9,16 @@ This page describes the API behavior in the current game build.
 
 <span class="api-context api-context--client">Client only</span> `ImGui` is unavailable in a Reflex module's `server.lua`.
 
+## Where the result appears
+
+| API | Display area |
+|---|---|
+| Global `ImGui:Draw*()` methods | Directly over the full game screen. The module chooses the position. |
+| `ImGui:DrawDebugText()` | In the built-in debug block at the edge of the screen. |
+| `ImGuiWindow` methods | Inside a separate HUD window that players can move and resize in the interface editor. |
+
+Rendering is direct and does not depend on a built-in HUD module. Every element exists only in the frame in which its drawing method is called.
+
 ## How ImGui works
 
 ImGui elements are drawn for the current frame only. Call drawing methods from `Scheduler:OnFrame()` to keep text or images visible.

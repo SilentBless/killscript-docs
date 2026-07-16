@@ -11,6 +11,12 @@ This page was verified on July 15, 2026, in KILLSCRIPT Pre-Alpha. The behavior w
 
 `T` identifies the element type. For example, `Array<Agent>` contains [`Agent`](../agent/) objects, while `Array<Hitbox>` contains [`Hitbox`](../agent/#hitbox) objects.
 
+## Purpose and processing
+
+`Array<T>` is the common adapter between C# game collections and Lua. A method such as `Agents:GetAll()` or `Inventory:GetItems()` produces a collection, while `Array` only lets Lua safely read its length and elements. The array does not search, refresh, or apply anything to the game by itself.
+
+Its contents are determined by the API that returned it. If the world may have changed—an agent died, an item was picked up, or a new round began—call the source method again instead of treating a retained `Array` as current.
+
 ## Key points
 
 - indexing starts at `1`;

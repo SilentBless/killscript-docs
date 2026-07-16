@@ -9,6 +9,25 @@ This page only documents properties and methods available in the current build w
 
 `ConfigConstant`, `ConfigFlag`, and `ItemConfigs` are available in client and Reflex server. Every configuration property is read-only.
 
+## Why configuration exists and who consumes it
+
+GameConfig is the rules database, not current match state. When game configuration loads, server movement, combat, economy, and item systems consume constants, flags, and item records. The client uses corresponding data for UI, local calculations, and presentation.
+
+`ConfigItem*` describes an item type—damage, spread, animation, and restrictions. A live instance with current ammunition and an owner is exposed through [`Item`](../item/). Lookup methods only return a database record and do not grant an item to a player.
+
+Every published field is getter-only. Changing custom-server rules requires an attached configuration and reload; Lua assignment does not change the database.
+
+| Data group | Consumer |
+|---|---|
+| Speed, acceleration, friction, jump, crouch, and landing | Server agent movement system. |
+| Spread, uncertainty, ADS, recoil, and shot parameters | `Aim`, weapon, and hitscan calculation systems. |
+| Sound radii and sound-spotting duration | Audio and team-visibility systems. |
+| Damage, penetration, fire, stun, and explosions | Server combat, projectile, and explosion systems. |
+| Violations and kick thresholds | In-game violation system. |
+| `ConfigDefusalShop` | Shop, economy, and starting-item grants. |
+| `ConfigItemFirearm/Melee/Throwable` | The corresponding live item and its calculation methods. |
+| `ConfigFlag` | Conditional mechanic branches that enable or disable individual rules. |
+
 ## Quick example
 
 ```lua
@@ -315,7 +334,14 @@ if firearm ~= nil then
 end
 ```
 
-Passing a name from the shop list does not guarantee a valid subtype wrapper. Check the result for `nil` first and do not call `tostring()` on an unchecked wrapper.
+Passing a name from the shop list does not guarantee a valid subtype wrapper.
+
+:::caution[Known issue in the current build]
+Typed methods can return a non-`nil` wrapper with no backing subtype configuration when the item exists but belongs to another type. Reading a property or calling `tostring()` on that object raises a C# `NullReferenceException`; a `nil` check alone is not sufficient. Only call a typed lookup with a name obtained from a matching live `FirearmItem`, `MeleeItem`, or `ThrowableItem`.
+
+The issue has been reported to the developer and will be fixed in a future build.
+:::
+
 ### Methods
 
 #### GetConfigItemByName
@@ -420,6 +446,10 @@ Returns the item name by ID. Returns 'Unknown' if the item is not found.
 
 Client-only. `GetWeaponPreview()` creates or returns a cached preview texture; the confirmed call produced a `512x512` texture.
 
+The client preview renderer produces an item image and returns it as a `Texture`. This is a separate visual render and does not create an item in the world. Results are cached by name, while `RemoveFromCache()` removes only the stored preview.
+
+The method does not open the shop or display the image automatically. Render the returned [`Texture`](../texture/) through [UI](../ui/) or [ImGui](../imgui/). `RemoveFromCache()` removes the stored result so a later request can generate it again; that call does not change the screen by itself either.
+
 ### Methods
 
 #### GetWeaponPreview
@@ -449,6 +479,3 @@ WeaponPreview.RemoveFromCache(weaponName: string)
 | Param | Type | Optional | Comment |
 |---|---|:---:|---|
 | `weaponName` | string |  |  |
-
-
-

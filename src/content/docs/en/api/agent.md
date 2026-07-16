@@ -9,6 +9,23 @@ This page only documents properties and methods available in the current build w
 
 `Agent` combines player state including health, aim, movement, inventory, and stats. All `Agent` and nested API properties are read-only; event structures and `AgentStats` fields are the exceptions.
 
+## How data flows
+
+Server simulation owns an agent's health, movement, inventory, aim, and stats. Reflex `server.lua` wrappers read that state on the server; `main.lua` reads its replicated client copy and local presentation data. Visibility restrictions may hide some information about an enemy.
+
+`Agent`, `Health`, `Movement`, `Inventory`, `Aim`, and the other nested objects access an existing agent; they are not separate character copies. A retained reference may become unavailable after death, a round transition, or disconnect, so long-running code should reacquire the agent through `Agents`.
+
+`HitEvent`, `DamageEvent`, `DeathEvent`, and `AgentStats` pass Lua a snapshot of a result that has already been calculated. Assigning their fields only changes the received Lua value; it does not rewrite damage, death, or the scoreboard.
+
+## What changes visually
+
+- On success, `Agent:TrySpectate()` switches the main view and standard spectator HUD to the selected agent.
+- `AgentInput:SetLookRotation()` changes the local agent's look direction; it does not create a separate [camera](../camera/).
+- On the client, `SetMoveDirection()` and `SetButtonState()` change the local agent's pending input; the methods do not show UI or a notification themselves. The temporary Reflex server bug documented below still applies.
+- `Aim:SetAimTarget()` and `ResetAimTarget()` change server-side aim-target state. They do not draw a target marker—use separate [UI](../ui/) or [WorldVisuals](../world-visuals/) for that.
+
+Setter methods return `nil`. Verify an available getter after a command instead of expecting on-screen confirmation.
+
 ## Quick example
 
 ```lua
@@ -72,6 +89,10 @@ Agent:TrySpectate(): bool
 ## AgentInput
 
 Available in client and Reflex server. Global API for reading input state and controlling the local agent.
+
+:::caution[Temporary Reflex server bug]
+In the current build, the `AgentInput:SetButtonState()`, `SetMoveDirection()`, and `SetLookRotation()` setters in `server.lua` change the Lua-visible state but do not apply input to the actually controlled agent. The `AgentInput` getters continue to work. The issue has been reported to the developer and will be fixed in a future build. Until then, do not rely on these setters for server-side input control.
+:::
 
 ### Methods
 
@@ -344,7 +365,7 @@ Aim:SetAimTarget(targetPosition: Vector3, agent: Agent)
 
 ## DamageEvent
 
-Damage received event. Every structure field supports reading and assignment (`get/set`).
+Damage received event. The game applies damage first and then passes this structure to `OnLocalPlayerReceivedDamage()`. Every field supports reading and assignment (`get/set`), but changing the structure does not change damage that was already applied.
 
 ### Fields
 
@@ -360,7 +381,7 @@ Damage received event. Every structure field supports reading and assignment (`g
 
 ## DeathEvent
 
-Agent death event passed to an `Agents:OnDeath()` callback. Every structure field supports reading and assignment (`get/set`).
+Agent death event passed to `Agents:OnDeath()` after the game processes the death. Every field supports reading and assignment (`get/set`); changing values does not cancel the death or alter the kill feed.
 
 ### Fields
 
@@ -455,7 +476,7 @@ Agent hitbox: position, radius, body part, and hit checks.
 
 ## HitEvent
 
-Hit event. Every structure field supports reading and assignment (`get/set`).
+Outgoing hit event. The combat system calculates the hit and damage before passing this structure to `OnLocalPlayerDealtDamage()`. Changing its fields does not affect the server result of the shot.
 
 ### Fields
 
@@ -471,6 +492,8 @@ Hit event. Every structure field supports reading and assignment (`get/set`).
 ## Interactable
 
 An object an agent can interact with. Every property is read-only.
+
+`CanInteract()` and `GetInteractDuration()` only query the interaction system's current conditions. They do not start pickup or defusal. The actual action is performed by regular game input; a [`Drop`](../item/#drop) also exposes a dedicated `PickUp()` method.
 
 ### Properties
 
@@ -517,6 +540,8 @@ Returns the interaction duration in seconds.
 
 Access to the agent interaction system.
 
+Fields report the object selected by the interaction system and progress of the current action. `Interactor` does not expose a command to start or complete an interaction.
+
 ### Properties
 
 | Property | Type | Access | Description |
@@ -530,6 +555,8 @@ Access to the agent interaction system.
 ## Inventory
 
 Access to the agent inventory and item management.
+
+Despite the name, the published methods here only read slots and items. They do not equip, drop, or purchase anything; those changes come from game input, [`Shop`](../shop/), or methods on specific world objects.
 
 ### Properties
 
@@ -598,6 +625,8 @@ Checks whether the specified inventory slot is empty.
 
 Data and calculations related to the agent's movement and position in the world.
 
+Properties are outputs of the movement system after input and physics have been processed for the current tick. `Movement` has no direct setters; `GetZones()` only classifies the current position against map zones.
+
 ### Properties
 
 | Property | Type | Access | Description |
@@ -628,6 +657,8 @@ Returns the list of zones the agent is currently in.
 
 Access to the agent occlusion/visibility system.
 
+The client visibility system decides which enemy information can be exposed to a module. These properties describe that result; they do not enable visibility or issue a raycast on demand.
+
 ### Properties
 
 | Property | Type | Access | Description |
@@ -637,4 +668,3 @@ Access to the agent occlusion/visibility system.
 | `TicksSinceLastVisible` | int | `get` | <span class="api-context api-context--client">Client only</span> Number of ticks since the agent was last visible. |
 
 Related types: [Array](../array/), [Color](../color/), [Vector2](../vector2/), [Vector3](../vector3/), and [Quaternion](../quaternion/).
-

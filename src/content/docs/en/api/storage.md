@@ -9,6 +9,14 @@ This page was verified on July 15, 2026, in KILLSCRIPT Pre-Alpha. Value types, n
 
 `Storage` is a regular Lua table containing local data for the current module. It is client-only; the global `Storage` value is `nil` in a Reflex `server.lua`.
 
+`Storage` has no interface of its own and is not synchronized with the server or other players. Only this module's code on the current client sees the values; render them through [UI](../ui/) or [ImGui](../imgui/) when the player needs to see them.
+
+## How data is persisted
+
+While the module runs, `Storage` is a regular table in its Lua environment. When module state is saved, the client module manager serializes supported values and restores them into a new table on the next load. Unsupported values do not become persistent.
+
+Assignment changes local state only. It does not emit an event, update `Config`, or notify other code automatically.
+
 ## Quick example
 
 ```lua

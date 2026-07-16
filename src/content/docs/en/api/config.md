@@ -11,6 +11,14 @@ This page was verified on July 15, 2026, in KILLSCRIPT Pre-Alpha. The file forma
 
 `Config` is available in `main.lua` and a Reflex `server.lua`. It is an empty table when the module declares no settings.
 
+Entries from `config.json` appear on the built-in settings screen for the selected module; the module does not need to draw those controls itself. The `Config` table exposes values, but assigning it from Lua is not a way to update that screen or save a new user default. Use [Storage](../storage/) for local runtime data.
+
+## How a setting is processed
+
+The game reads `config.json`, validates types and limits, creates built-in controls, and fills `Config` with saved values. Module code only reads the resulting table and decides where each setting is applied.
+
+Changing a setting in the UI saves the value and refills the client `Config` table. Reflex server values are provided when the server part of the module is loaded or reloaded; `Config` is not a separate runtime command channel.
+
 ## Minimal config.json
 
 The file belongs in the module root. Its root must be a JSON array:
@@ -126,6 +134,8 @@ Both `value` and Lua use a zero-based option index:
 
 :::caution[Do not put an option string in value]
 `"value": "Center"` was rejected by the validator. Use `"value": 1` for the second option.
+
+In the current build, the validator also accepts numeric indices outside `options`, such as `999`. Always keep `value` between `0` and `#options - 1`. The issue has been reported to the developer and will be fixed in a future build.
 :::
 
 ### maskenum
